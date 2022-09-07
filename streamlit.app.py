@@ -14,9 +14,9 @@ conn = snowflake.connector.connect(
                 )
 dbs = pd.read_sql("select database_name from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
 
+dbl =  list(dbs['DATABASE_NAME'])
 
-
-options = st.multiselect('select the database', dbs)
+options = st.multiselect('select the database', dbl)
 #displaying the selected options
 st.write('You have selected:', options)
 
