@@ -1,6 +1,6 @@
 import streamlit as st
 st.title("sample")
-pip install snowflake-connector-python
+
 import pandas as pd
 import snowflake.connector
 conn = snowflake.connector.connect(
