@@ -31,7 +31,7 @@ tabs = list(set(list(tabl['TABLE_NAME'])))
 final = st.selectbox('select schema:',tabs)
 st.write('You selected:', final)
 
-dis = pd.read_sql("select COLUMN_NAME,TAG_NAME,TAG_VALUE from snowflake.account_usage.tag_references;",conn)
+dis = pd.read_sql("select COLUMN_NAME,TAG_NAME,TAG_VALUE,OBJECT_NAME from snowflake.account_usage.tag_references;",conn)
 disp = dis.loc[dis['OBJECT_NAME']==final]
 disp
 
