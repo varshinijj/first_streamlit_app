@@ -19,12 +19,14 @@ st.write('You selected:', option)
 
 sc= pd.read_sql("select schema_name as schema,catalog_name as database from SNOWFLAKE.ACCOUNT_USAGE.SCHEMATA where deleted is NULL and catalog_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn) 
 scl = sc.loc[sc['DATABASE']==option] 
+scl
 scs = list(set(list(scl['SCHEMA'])))
 next = st.selectbox('select schema:',scs)
 st.write('You selected:', next)
 
 tab = pd.read_sql("select table_name,table_schema as schema,table_catalog as database from SNOWFLAKE.ACCOUNT_USAGE.TABLES where deleted is NULL and table_catalog not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
 tabl = tab.loc[tab['SCHEMA']==next]
+tabl
 tabs = list(set(list(tabl['TABLE_NAME'])))
 final = st.selectbox('select schema:',tabs)
 st.write('You selected:', final)
