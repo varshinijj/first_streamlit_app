@@ -18,8 +18,8 @@ option = st.selectbox('select database:',dbs)
 st.write('You selected:', option)
 
 sc= pd.read_sql("select schema_name as schema,catalog_name as database from SNOWFLAKE.ACCOUNT_USAGE.SCHEMATA where deleted is NULL and catalog_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn) 
-sc.loc[sc['DATABASE']==option] 
-scs = list(set(list(sc['SCHEMA'])))
+scl = sc.loc[sc['DATABASE']==option] 
+scs = list(set(list(scl['SCHEMA'])))
 next = st.selectbox('select schema:',scs)
 st.write('You selected:', next)
 
