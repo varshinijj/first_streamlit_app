@@ -1,5 +1,5 @@
 import streamlit as st
-st.title("snowflake data app").blue{background-color: lightcoral;}
+st.title("snowflake data app")
 
 import pandas as pd
 import snowflake.connector
