@@ -12,5 +12,5 @@ conn = snowflake.connector.connect(
                 schema='ACCOUNT_USAGE',
     ocsp_fail_open=False
                 )
-dbs = pd.read_sql("show databases;",conn)
+dbs = pd.read_sql("select * from "SNOWFLAKE"."ACCOUNT_USAGE"."DATABASES" where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
 option =st.selectbox('select market segment:', dbs)
