@@ -13,9 +13,8 @@ conn = snowflake.connector.connect(
     ocsp_fail_open=False
                 )
 dbs = pd.read_sql("select database_name from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
-option = st.selectbox('select database:', list(dbs))
 
-
+option = st.multiselect("Pick some fruits:", dbs)
 
 
 st.header(option)            
