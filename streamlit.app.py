@@ -29,7 +29,7 @@ tabl1 = tab.loc[tab['SCHEMA']==next]
 tabl2 = tabl1.loc[tabl1['DATABASE']==option]
 tabl2
 tabs = list(set(list(tabl2['TABLE_NAME'])))
-final = st.selectbox('select schema:',tabs)
+final = st.selectbox('select table:',tabs)
 st.write('Selected Table:', final)
 
 dis = pd.read_sql("select COLUMN_NAME,TAG_NAME,TAG_VALUE,OBJECT_NAME from snowflake.account_usage.tag_references;",conn)
