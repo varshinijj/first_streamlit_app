@@ -13,8 +13,10 @@ conn = snowflake.connector.connect(
     ocsp_fail_open=False
                 )
 dbs = pd.read_sql("select database_name from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
+dbl = dbs.to_list()
 
-option = st.multiselect("Pick some fruits:", dbs)
-sc= pd.read_sql("select schema_name,catalog_name from SNOWFLAKE.ACCOUNT_USAGE.SCHEMATA where deleted is NULL and catalog_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn) 
-sctab = sc.loc[option]      
-st.dataframe(sc)
+
+options = st.multiselect('select the database', dbl)
+#displaying the selected options
+st.write('You have selected:', options)
+
