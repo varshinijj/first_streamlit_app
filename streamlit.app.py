@@ -8,9 +8,9 @@ conn = snowflake.connector.connect(
                 password='Snowflake22!',
                 account='cy06007.ap-southeast-1',
                 warehouse='MAX',
-                database='SNOWFLAKE_SAMPLE_DATA',
-                schema='TPCH_SF1',
+                database='SNOWFLAKE',
+                schema='ACCOUNT_USAGE',
     ocsp_fail_open=False
                 )
-mktsegment = pd.read_sql("select distinct C_MKTSEGMENT from SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMER limit 10;",conn)
-option =st.selectbox('select market segment:', mktsegment)
+dbs = pd.read_sql("show databases;",conn)
+option =st.selectbox('select market segment:', dbs)
