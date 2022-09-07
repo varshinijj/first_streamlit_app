@@ -14,6 +14,12 @@ conn = snowflake.connector.connect(
                 )
 dbs = pd.read_sql("select database_name from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
 
-option = st.selectbox('select database:',dbs)
+def clear_multi():
+    st.session_state.multiselect = []
+    return
+multi = st.multiselect("Pick an option", dbs)
+st.session_state
 
-st.write('You selected:', option)
+#create your button to clear the state of the multiselect
+st.button("Clear multiselect", on_click=clear_multi)
+
