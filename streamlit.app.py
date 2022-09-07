@@ -13,7 +13,7 @@ conn = snowflake.connector.connect(
     ocsp_fail_open=False
                 )
 db = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
-dbs = list(set(list(sc['DATABASE'])))
+dbs = list(set(list(db['DATABASE'])))
 option = st.selectbox('select database:',dbs)
 st.write('You selected:', option)
 
