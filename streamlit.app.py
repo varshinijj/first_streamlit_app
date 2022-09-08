@@ -15,10 +15,8 @@ dbs = list(set(list(db['DATABASE'])))
 option = st.selectbox('select database:',dbs)
 st.write('Selected Database :', option)
 
-sc= pd.read_sql("select schema_name as schema,catalog_name as database from SNOWFLAKE.ACCOUNT_USAGE.SCHEMATA where deleted is NULL and catalog_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn) 
-scl = sc.loc[sc['DATABASE']==option].reset_index(drop=True)
-scl
-scs = list(set(list(scl['SCHEMA'])))
+sc= pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA;".format(option),conn)
+scs = list(set(list(sc['SCHEMA'])))
 next = st.selectbox('select schema:',scs)
 st.write('Selected Schema:', next)
 
