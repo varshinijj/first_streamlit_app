@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
-st.sidebar.title("CONFIGURE WAREHOUSE")
+st.sidebar.title("Configure Warehouse")
 
 import pandas as pd
 import snowflake.connector
@@ -11,7 +11,7 @@ conn = snowflake.connector.connect(
                 warehouse = 'UI',
     ocsp_fail_open=False
                 )
-st.sidebar.markdown("click here to resize warehouse")
+
 size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),index=3)
 min, max = st.sidebar.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
 st.sidebar.write('min:', int(min), 'max:', int(max))
