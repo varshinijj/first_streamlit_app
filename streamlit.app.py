@@ -35,6 +35,9 @@ disp = dis.loc[dis['OBJECT_NAME']==final][['COLUMN_NAME','TAG_NAME','TAG_VALUE']
 disp_pivot=disp.pivot(index=['COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
 disp_pivot
 
+val = pd.read_sql("select * from table {};".format(option.next.final),conn)
+val
+
 
 
 
