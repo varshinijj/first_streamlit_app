@@ -21,7 +21,8 @@ scs = list(set(list(sc['SCHEMA'])))
 next = st.selectbox('select schema:',scs)
 st.write('Selected Schema:', next)
 
-tab = pd.read_sql("select TABLE_CATALOG AS DATABASE,TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA = {};".format(option,str(next)),conn) 
+tab = pd.read_sql("select TABLE_CATALOG AS DATABASE,TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES;".format(option),conn) 
+tab = tab.loc[tab['SCHEMA']==next]
 tab
 tabs = list(set(list(tab['TABLE_NAME'])))
 final = st.selectbox('select table:',tabs)
