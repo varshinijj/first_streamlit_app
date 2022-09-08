@@ -6,7 +6,7 @@ import snowflake.connector
 conn = snowflake.connector.connect(
                 user='VARSHINI',
                 password='Snowflake22!',
-                account='cy06007.ap-southeast-1',
+                account='bv18063.ap-southeast-1',
     ocsp_fail_open=False
                 )
     
