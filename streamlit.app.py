@@ -12,10 +12,9 @@ conn = snowflake.connector.connect(
     ocsp_fail_open=False
                 )
 st.sidebar.markdown("click here to resize warehouse")
-size = st.sidebar.selectbox('select size', 
-                                    ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),index=3)
-min, max = st.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
-st.write('min:', int(min), 'max:', int(max))
+size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),index=3)
+min, max = st.sidebar.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
+st.sidebar.write('min:', int(min), 'max:', int(max))
   
 apply = st.sidebar.checkbox("Apply", False, key = 1)
 if apply:
