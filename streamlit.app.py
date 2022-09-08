@@ -28,7 +28,7 @@ tabs = list(set(list(tab['TABLE_NAME'])))
 final = st.selectbox('select table:',tabs)
 st.write('Selected Table:', final)
 
-conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'))".format(option,next,final,option,next,final);
+conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'))".format(option,next,final,option,next,final),conn);
 
 
 
