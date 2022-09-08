@@ -30,14 +30,11 @@ tabs = list(set(list(tabl2['TABLE_NAME'])))
 final = st.selectbox('select table:',tabs)
 st.write('Selected Table:', final)
 
-dis = pd.read_sql("select COLUMN_NAME,TAG_NAME,TAG_VALUE,OBJECT_NAME from snowflake.account_usage.tag_references;",conn)
-disp = dis.loc[dis['OBJECT_NAME']==final][['COLUMN_NAME','TAG_NAME','TAG_VALUE']].reset_index(drop=True)
-disp_pivot=disp.pivot(index=['COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-disp_pivot
 
-val = pd.read_sql("select TAG_NAME,TAG_VALUE,COLUMN_NAME from table({}.information_schema.tag_references_all_columns('{}.{}.{}', 'table'));".format(option,option,next,final),conn)
+
+val = pd.read_sql("select COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}', 'table'));".format(option,option,next,final),conn)
+val = val.pivot(index=['COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
 val
-
 
 
 
