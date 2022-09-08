@@ -28,7 +28,7 @@ db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_U
 dbs = list(set(list(db_data['DATABASE'])))
 st.sidebar.title("Choose Database")
 DB = st.sidebar.selectbox('select database:',dbs)
-tab = pd.read_sql("select TABLE_CATALOG AS DATABASE,TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES;".format(DB),conn) 
+tab = pd.read_sql("select TABLE_CATALOG AS DATABASE,TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn) 
 tab
 
 
