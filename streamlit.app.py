@@ -1,5 +1,4 @@
 import streamlit as st
-st.title("Snowflake Data-App")
 import plotly.graph_objects as go
 st.sidebar.title("CONFIGURE WAREHOUSE")
 
@@ -9,8 +8,19 @@ conn = snowflake.connector.connect(
                 user='VARSHINI',
                 password='Snowflake@22!',
                 account='bv18063.ap-southeast-1',
+                warehouse = 'UI'
     ocsp_fail_open=False
                 )
+st.sidebar.markdown("click here to resize warehouse")
+size = st.sidebar.selectbox('select size', 
+                                    ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),index=3)
+  
+apply = st.sidebar.checkbox("Apply all changes", False, key = 1)
+if apply:
+  conn.cursor().execute("alter warehouse UI set warehouse_size = {};".format(size))
+else:
+  conn.cursor().execute("alter warehouse UI set warehouse_size = LARGE;")
+
     
 db = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
 dbs = list(set(list(db['DATABASE'])))
