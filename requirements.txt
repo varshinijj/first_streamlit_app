@@ -1,4 +1,7 @@
 # requirements.txt
 snowflake-connector-python
 plotly
-pygraphviz
+streamlit
+streamlit_tags
+streamlit_agraph
+pygraphviz 
