@@ -8,7 +8,7 @@ conn = snowflake.connector.connect(
                 user='VARSHINI',
                 password='Snowflake@22!',
                 account='bv18063.ap-southeast-1',
-                warehouse = 'UI'
+                warehouse = 'UI',
     ocsp_fail_open=False
                 )
 st.sidebar.markdown("click here to resize warehouse")
