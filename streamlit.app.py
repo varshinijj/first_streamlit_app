@@ -1,5 +1,7 @@
 import streamlit as st
 st.title("Snowflake Data-App")
+import plotly.graph_objects as go
+st.sidebar.title("CONFIGURE WAREHOUSE")
 
 import pandas as pd
 import snowflake.connector
