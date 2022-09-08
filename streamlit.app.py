@@ -28,6 +28,8 @@ tabs = list(set(list(tab['TABLE_NAME'])))
 final = st.selectbox('select table:',tabs)
 st.write('Selected Table:', final)
 
+conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'))".format(option,next,final,option,next,final);
+
 
 
 val = pd.read_sql("select COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}', 'table'));".format(option,option,next,final),conn)
