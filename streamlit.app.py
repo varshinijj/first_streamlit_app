@@ -1,5 +1,5 @@
 import streamlit as st
-st.title("snowflake data app")
+st.title("Snowflake Data App")
 
 import pandas as pd
 import snowflake.connector
