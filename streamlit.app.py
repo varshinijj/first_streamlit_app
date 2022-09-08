@@ -15,15 +15,14 @@ dbs = list(set(list(db['DATABASE'])))
 option = st.selectbox('select database:',dbs)
 st.write('Selected Database :', option)
 
-sc= pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA;".format(option),conn)
+sc= pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME NOT IN ('INFORMATION_SCHEMA');".format(option),conn)
+sc
 scs = list(set(list(sc['SCHEMA'])))
 next = st.selectbox('select schema:',scs)
 st.write('Selected Schema:', next)
 
-tab = pd.read_sql("select table_name,table_schema as schema,table_catalog as database from SNOWFLAKE.ACCOUNT_USAGE.TABLES where deleted is NULL and table_catalog not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
-tabl1 = tab.loc[tab['SCHEMA']==next]
-tabl2 = tabl1.loc[tabl1['DATABASE']==option].reset_index(drop=True)
-tabl2
+tab = pd.read_sql("select TABLE_CATALOG AS DATABASE,TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA NOT IN ('INFORMATION_SCHEMA') and TABLE_SCHEMA = {};".format(option,next),conn) 
+tab
 tabs = list(set(list(tabl2['TABLE_NAME'])))
 final = st.selectbox('select table:',tabs)
 st.write('Selected Table:', final)
