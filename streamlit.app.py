@@ -14,12 +14,14 @@ conn = snowflake.connector.connect(
 st.sidebar.markdown("click here to resize warehouse")
 size = st.sidebar.selectbox('select size', 
                                     ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),index=3)
+min, max = st.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
+st.write('min:', int(min), 'max:', int(max))
   
-apply = st.sidebar.checkbox("Apply all changes", False, key = 1)
+apply = st.sidebar.checkbox("Apply", False, key = 1)
 if apply:
-  conn.cursor().execute("alter warehouse UI set warehouse_size = {};".format(size))
+  conn.cursor().execute("alter warehouse UI set warehouse_size ={} MAX_CLUSTER_COUNT ={} MIN_CLUSTER_COUNT ={};".format(size,int(max),int(min)))
 else:
-  conn.cursor().execute("alter warehouse UI set warehouse_size = LARGE;")
+  conn.cursor().execute("alter warehouse UI set warehouse_size = LARGE MAX_CLUSTER_COUNT =2 MIN_CLUSTER_COUNT =1;")
 
     
 db = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
