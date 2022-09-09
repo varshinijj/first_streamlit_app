@@ -51,7 +51,7 @@ with d.subgraph() as s:
     s.attr(rank='same')
     
     for idx,row in tags_tb.iterrows():
-        s.node('{}'.format(str(row['COLUMN_NAME']).split()[1])) [shape='box']
+        s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]),shape='box')
         d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))
              
 
