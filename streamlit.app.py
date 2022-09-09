@@ -7,7 +7,6 @@ conn = snowflake.connector.connect(
                 user='VARSHINI',
                 password='Snowflake@22!',
                 account='bg35464.ap-southeast-1',
-                warehouse = 'UI',
                 ocsp_fail_open=False)
 
 db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES;",conn)
