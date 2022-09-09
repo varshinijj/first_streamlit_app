@@ -55,10 +55,9 @@ with d.subgraph() as s:
 with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
-        s.node('{}'.format(row['PRIVACY_CATEGORY']))
-        s.node('{}'.format(row['SEMANTIC_CATEGORY']))
-        d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['PRIVACY_CATEGORY']))  
-        d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['SEMANTIC_CATEGORY'])) 
+        s.node('{}'.format(row['TAG_VALUE']))
+        d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']))  
+        
  
 st.graphviz_chart(d)
 
