@@ -34,7 +34,7 @@ tags1 = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG
 tags1
 tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['COLUMN_NAME','TAG_VALUE']]
 tags_semantic
-tags_tb = tags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
 d = graphviz.Digraph()
 with d.subgraph() as s:
     s.attr(rank='same')
