@@ -27,6 +27,16 @@ else:
     
 sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
 sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
+col1, col2 = st.columns([1, 4])
+
+with col1:
+    for x in list(sc_tb['SCHEMA'].unique()):
+        schemas = st.checkbox('{}'.format(x),False)
+        if schemas==False:
+            sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
+    allschemas = st.checkbox('All schemas',True)
+    if allschemas:
+        sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
 tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE FROM SNOWFLAKE.ACCOUNT_USAGE.TAG_REFERENCES where object_deleted is null;",conn) 
 tags1 = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
 
