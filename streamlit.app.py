@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import graphviz as graphviz
 import pandas as pd
+st.set_page_config(layout="wide")
 import snowflake.connector
 conn = snowflake.connector.connect(
                 user='VARSHINI',
