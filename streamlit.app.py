@@ -33,6 +33,7 @@ tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,O
 tags = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
 tags
 tags_tb = tags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+tags_tb
 d = graphviz.Digraph()
 with d.subgraph() as s:
     s.attr(rank='same')
