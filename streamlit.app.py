@@ -24,11 +24,15 @@ apply = st.sidebar.checkbox("Apply", False, key = 1)
 if apply:
   conn.cursor().execute("alter warehouse UI set warehouse_size ={} MAX_CLUSTER_COUNT ={} MIN_CLUSTER_COUNT ={};".format(size,int(max),int(min)))
 else:
-  conn.cursor().execute("alter warehouse UI set warehouse_size = LARGE MAX_CLUSTER_COUNT =2 MIN_CLUSTER_COUNT =1;")
+  conn.cursor().execute("alter warehouse UI set warehouse_size = SMALL MAX_CLUSTER_COUNT =2 MIN_CLUSTER_COUNT =1;")
 
     
 sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
 sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
+tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE FROM SNOWFLAKE.ACCOUNT_USAGE.TAG_REFERENCES;",conn) 
+tags_tb = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
+tags_tb = tags_tb.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+
 d = graphviz.Digraph()
 with d.subgraph() as s:
     s.attr(rank='same')
@@ -43,18 +47,21 @@ with d.subgraph() as s:
     for idx,row in sc_tb.iterrows():
         s.node('{}'.format(row['TABLE_NAME']))
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))
-
 with d.subgraph() as s:
     s.attr(rank='same')
-    for idx,row in sc_tb.iterrows():
-        s.node('{}'.format(row['TABLE_NAME']))
-        d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME'])) 
-        
+    for idx,row in tags_tb.iterrows():
+        s.node('{}'.format(row['COLUMN_NAME']))
+        d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['COLUMN_NAME']))        
+with d.subgraph() as s:
+    s.attr(rank='same')
+    for idx,row in tags_tb.iterrows():
+        s.node('{}'.format(row['PRIVACY_CATEGORY']))
+        s.node('{}'.format(row['SEMANTIC_CATEGORY']))
+        d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['PRIVACY_CATEGORY']))  
+        d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['SEMANTIC_CATEGORY'])) 
  
 st.graphviz_chart(d)
-tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE FROM SNOWFLAKE.ACCOUNT_USAGE.TAG_REFERENCES;",conn) 
-tags_tb = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
-tags_tb = tags_tb.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-tags_tb
+
+
 
 
