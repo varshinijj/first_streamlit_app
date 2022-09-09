@@ -53,7 +53,7 @@ with d.subgraph() as s:
         s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
         d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))
 with d.subgraph() as s:
-    s.attr(rank='same')
+    s.attr(rank='same',shape='diamond')
     for idx,row in tags_semantic.iterrows():
         s.node('{}'.format(row['TAG_VALUE']))
         d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']))
