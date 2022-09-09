@@ -51,11 +51,9 @@ with d.subgraph() as s:
     for idx,row in tags_tb.iterrows():
         s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
         d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))
-with d.subgraph() as s:
-    s.attr(rank='different')
-    for idx,row in tags_tb.iterrows():
-        s.node('{}'.format(str(row['TAG_VALUE']).split()[1]))
-        d.edge('{}'.format(str(row['TAG_VALUE']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))        
+for idx,row in tags_tb.iterrows():
+  s.node('{}'.format(str(row['TAG_VALUE']).split()[1]))
+  d.edge('{}'.format(str(row['TAG_VALUE']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))        
      
              
 
