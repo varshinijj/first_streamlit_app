@@ -34,7 +34,7 @@ tags_tb = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','T
 tags_tb = tags_tb.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
 
 d = graphviz.Digraph()
-d.attr(bgcolor='white:black')
+d.attr(bgcolor='grey',fontcolor = 'white')
 with d.subgraph() as s:
     s.attr(rank='same')
     s.node('{}'.format(DB)) 
@@ -49,8 +49,7 @@ with d.subgraph() as s:
         s.node('{}'.format(row['TABLE_NAME']))
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))
 with d.subgraph() as s:
-    s.attr(rank='same')
-    s.attr('node', shape='box')
+    s.attr(rank='same',shape='box')
     for idx,row in tags_tb.iterrows():
         s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
         d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))
