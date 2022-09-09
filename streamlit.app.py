@@ -42,9 +42,19 @@ with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
         s.node('{}'.format(row['TABLE_NAME']))
-        d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))     
+        d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))
+
+with d.subgraph() as s:
+    s.attr(rank='same')
+    for idx,row in sc_tb.iterrows():
+        s.node('{}'.format(row['TABLE_NAME']))
+        d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME'])) 
+        
  
 st.graphviz_chart(d)
-
+tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,OBJECT_NAME as table,COLUMN_NAME as column,TAG_NAME,TAG_VALUE FROM SNOWFLAKE.ACCOUNT_USAGE.TAG_REFERENCES;",conn) 
+tags_tb = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE','COLUMN','TAG_NAME','TAG_VALUE']]
+tags_tb = tags_tb.pivot(index=['SCHEMA','TABLE','COLUMN',],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+tags_tb
 
 
