@@ -49,9 +49,9 @@ with d.subgraph() as s:
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))
 with d.subgraph() as s:
     s.attr(rank='same')
-    s.attr(shape='box')
+    
     for idx,row in tags_tb.iterrows():
-        s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
+        s.node('{}'.format(str(row['COLUMN_NAME']).split()[1])) [shape=box]
         d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))
              
 
