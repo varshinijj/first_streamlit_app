@@ -17,7 +17,7 @@ st.sidebar.title("Choose Database")
 DB = st.sidebar.selectbox('select database:',dbs)
 
 st.sidebar.title("Configure Warehouse")
-size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),3)
+size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),1)
 min, max = st.sidebar.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
 st.sidebar.write('min:', int(min), 'max:', int(max))
 apply = st.sidebar.checkbox("Apply", False, key = 1)
@@ -50,7 +50,7 @@ with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags.iterrows():
         s.node('{}'.format(row['COLUMN_NAME']))
-        d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['COLUMN_NAME']))        
+        
 
    
      
