@@ -65,7 +65,7 @@ with col2:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
       s.node('{}'.format(row['TABLE_NAME']))
-      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),taillabel ='Table', len='1.00')
+      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),headlabel ='Table', len='1.00')
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
