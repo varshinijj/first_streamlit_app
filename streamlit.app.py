@@ -30,8 +30,8 @@ else:
 sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
 sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
 tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE FROM SNOWFLAKE.ACCOUNT_USAGE.TAG_REFERENCES where object_deleted is null;",conn) 
-tags_tb = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
-tags_tb = tags_tb.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+tags = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
+tags_tb = tags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
 d = graphviz.Digraph()
 with d.subgraph() as s:
     s.attr(rank='same')
@@ -48,9 +48,9 @@ with d.subgraph() as s:
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))
 with d.subgraph() as s:
     s.attr(rank='same')
-    for idx,row in tags_tb.iterrows():
-        s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
-        d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))
+    for idx,row in tags.iterrows():
+        s.node('{}'.format(row['COLUMN_NAME']))
+        d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['COLUMN_NAME']))
 with d.subgraph() as c:
     c.attr(rank='same')
     for idx,row in tags_tb.iterrows():
