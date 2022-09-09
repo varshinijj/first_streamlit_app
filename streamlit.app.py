@@ -45,8 +45,8 @@ with d.subgraph() as s:
 with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
-        s.node('{}'.format(str(row['TABLE_NAME']).split()[1]))
-        d.edge('{}'.format(row['SCHEMA']),'{}'.format(str(row['TABLE_NAME']).split()[1]))
+        s.node('{}'.format(row['TABLE_NAME']))
+        d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))
 with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
