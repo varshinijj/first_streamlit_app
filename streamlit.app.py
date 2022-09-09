@@ -34,7 +34,7 @@ tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_
 col1, col2 = st.columns([1, 4])
 
 with col1:
-  st.title("Choose Schemas")
+    st.title("Choose Schemas")
     for x in list(sc['SCHEMA'].unique()):
         schemas = st.checkbox('{}'.format(x),False)
         if schemas==False:
