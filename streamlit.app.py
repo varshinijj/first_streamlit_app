@@ -27,16 +27,15 @@ else:
   conn.cursor().execute("alter warehouse UI set warehouse_size = LARGE MAX_CLUSTER_COUNT =2 MIN_CLUSTER_COUNT =1;")
 
     
-
+sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME =!'INFORMATION_SCHEMA';".format(DB),conn)
 sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-sc_tb
 d = graphviz.Digraph()
 with d.subgraph() as s:
     s.attr(rank='same')
     s.node('{}'.format(DB)) 
 with d.subgraph() as s:
     s.attr(rank='same')
-    for x in list(sc_tb['SCHEMA'].unique()):
+    for x in list(sc['SCHEMA']):
         s.node('{}'.format(x))
         d.edge('{}'.format(DB),'{}'.format(x)) 
 with d.subgraph() as s:
