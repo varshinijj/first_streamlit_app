@@ -60,7 +60,7 @@ with col2:
     s.attr(rank='same')
     for x in list(sc['SCHEMA']):
       s.node('{}'.format(x))
-      d.edge('{}'.format(DB),'{}'.format(x),label='Schema', len='1.00') 
+      d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema', len='1.00') 
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
@@ -70,12 +70,12 @@ with col2:
     s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
       s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
-      d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]),label='Column', len='1.00')
+      d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]),headlabel='Column', len='1.00')
   with d.subgraph() as s:
     s.attr(rank='same',shape='diamond')
     for idx,row in tags_semantic.iterrows():
       s.node('{}'.format(row['TAG_VALUE']))
-      d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']),label='Tag', len='1.00')
+      d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']),headlabel='Tag', len='1.00')
        
   st.graphviz_chart(d)
 
