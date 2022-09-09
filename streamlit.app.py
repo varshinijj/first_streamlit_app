@@ -55,7 +55,7 @@ with col2:
   d.attr(bgcolor='grey')
   with d.subgraph() as s:
     s.attr(rank='same')
-    s.node('{}'.format(DB),shape="hexagon")  
+    s.node('{}'.format(DB))  
   with d.subgraph() as s:
     s.attr(rank='same')
     for x in list(sc['SCHEMA']):
