@@ -12,7 +12,7 @@ conn = snowflake.connector.connect(
 db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
 dbs = list(set(list(db_data['DATABASE'])))
 st.sidebar.title("Choose Database")
-DB = st.sidebar.selectbox('select database:',dbs)
+DB = st.sidebar.radio('select database:',dbs,0)
 
 st.sidebar.title("Configure Warehouse")
 size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),1)
