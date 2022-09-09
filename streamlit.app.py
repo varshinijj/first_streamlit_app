@@ -47,12 +47,16 @@ with d.subgraph() as s:
     for idx,row in sc_tb.iterrows():
         s.node('{}'.format(row['TABLE_NAME']))
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']))
-with d.subgraph() as c:
-    c.attr('node', shape='box', fillcolor='red:yellow',
-           style='filled', gradientangle='90')
+with d.subgraph() as s:
+    s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
-        c.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
+        s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
         d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]))
+with d.subgraph() as s:
+    s.attr(rank='same')
+    for idx,row in tags_tb.iterrows():
+        s.node('{}'.format(str(row['TAG_VALUE']).split()[1]))
+        d.edge('{}'.format(str(row['COLUMN_NAME']).split()[1]),'{}'.format(str(row['TAG_VALUE']).split()[1]))       
              
 
         
