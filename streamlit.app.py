@@ -8,8 +8,7 @@ conn = snowflake.connector.connect(
                 password='Snowflake@22!',
                 account='bg35464.ap-southeast-1',
                 warehouse = 'UI',
-    ocsp_fail_open=False
-                )
+                ocsp_fail_open=False)
 
 db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where deleted is NULL and database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA');",conn)
 dbs = list(set(list(db_data['DATABASE'])))
