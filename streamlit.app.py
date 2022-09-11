@@ -39,6 +39,7 @@ with col2:
       tags_pivot = tags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
       tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
       tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+      tags_pivot
 with col1: 
   select = ['All Schemas','Select Schemas']
   click = st.radio('Choose Schemas:',select)
