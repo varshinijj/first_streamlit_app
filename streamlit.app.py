@@ -87,13 +87,13 @@ with col2:
       s.attr(rank='same')
       for idx,row in tags_tb_grouped.iterrows():
         s.node('{}'.format(row['no.of.sensitive_col']),shape='circle',fontcolor='white',color = 'white')
-        d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')        
-             
-       
+        d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')            
   st.graphviz_chart(d)
-
+  with st.expander("See Tags"):
+    tags_pivot.loc[tags_pivot['SCHEMA'] in list(sc_tb['SCHEMA'])]
+        
 with col3:
-  st.subheader("masking policy options")
+  st.write("masking policy options")
   
 
 
