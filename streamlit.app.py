@@ -32,11 +32,11 @@ else:
     
 sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
 sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-col1, col2,col3 = st.columns([1, 6,1])
+col1, col2,col3 = st.columns([1,5,1])
 
 with col1:
   select = ['All Schemas','Select Schemas']
-  click = st.radio(select)
+  click = st.radio('Choose Schema:',select)
   if click =='All Schemas':
     sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
     sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
@@ -45,7 +45,8 @@ with col1:
       schemas = st.checkbox('{}'.format(x),False)
       if schemas==False:
         sc = sc.loc[sc['SCHEMA']!=x]
-        sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]  
+        sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x] 
+      
   classify = st.button('Classify')
   if classify:
     if sc.shape[0] ==0:
@@ -71,7 +72,7 @@ with col1:
         tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
    
 with col2:
-  
+  st.markdown("Click classify to see the number of sensitive columns")  
   d = graphviz.Digraph()
   d.attr(bgcolor='#0e1117')
   with d.subgraph() as s:
