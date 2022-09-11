@@ -29,34 +29,32 @@ else:
     
 sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
 sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE FROM SNOWFLAKE.ACCOUNT_USAGE.TAG_REFERENCES where object_deleted is null;",conn) 
-tags1 = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
-tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['SCHEMA','COLUMN_NAME','TAG_VALUE']]
-tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-tags_tb1 = tags_tb[['SCHEMA','TABLE_NAME']]
-tags_tb_grouped = tags_tb1.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
-tags_tb_grouped
 col1, col2,col3 = st.columns([1, 6,1])
-
+with col2:
+  classify = st.button('Classify')
+    if classify:
+        for idx,row in sc_tb.iterrows():
+          conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'))".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']));
+          tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
+          tags_pivot = tags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+          tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
+          tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
 with col1: 
   select = ['All Schemas','Select Schemas']
   click = st.radio('Choose Schemas:',select)
   if click =='All Schemas':
     sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
     sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn) 
-    tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-    tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['SCHEMA','COLUMN_NAME','TAG_VALUE']]
+    tags_tb_grouped = tags_tb1.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
   else:
     for x in list(sc['SCHEMA']):
       schemas = st.checkbox('{}'.format(x),False)
       if schemas==False:
         sc = sc.loc[sc['SCHEMA']!=x]
         sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
-        tags_tb = tags_tb.loc[tags_tb['SCHEMA']!=x]
-        tags_semantic = tags_semantic.loc[tags_semantic['SCHEMA']!=x]
+        tags_tb_grouped = tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']!=x] 
        
-with col2:
-  
+
   d = graphviz.Digraph()
   d.attr(bgcolor='dark')
   with d.subgraph() as s:
@@ -72,6 +70,7 @@ with col2:
     for idx,row in sc_tb.iterrows():
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
+  if classify:    
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags_tb_grouped.iterrows():
