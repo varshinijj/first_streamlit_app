@@ -43,12 +43,12 @@ with col1:
       schemas = st.checkbox('{}'.format(x),False)
       if schemas==False:
         sc = sc.loc[sc['SCHEMA']!=x]
-        sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
-  if click!='All Schemas' and sc.shape[0] ==0:
-    st.write("you need to select a schema")
-  else:  
-    classify = st.button('Classify')
-    if classify:
+        sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]  
+  classify = st.button('Classify')
+  if classify:
+    if sc.shape[0] ==0:
+      st.write("**Please Select a Schema**")
+    else:
       alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
       for idx,row in sc_tb.iterrows():
         conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'));".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']))
