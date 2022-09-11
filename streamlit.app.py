@@ -32,7 +32,7 @@ else:
     
 sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
 sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-col1, col2,col3 = st.columns([1,5,1])
+col1, col2,col3 = st.columns([2,5,1])
 
 with col1:
   select = ['All Schemas','Select Schemas']
