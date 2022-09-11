@@ -90,7 +90,9 @@ with col2:
         d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')            
   st.graphviz_chart(d)
   with st.expander("See Tags"):
-    tags_pivot.loc[tags_pivot['SCHEMA'] in (list(sc_tb['SCHEMA']))]
+    for idx,row in tags_pivot.iterrows():
+      if row['SCHEMA'] not in list(sc_tb['SCHEMA']):
+        row['SCHEMA']
         
 with col3:
   st.write("masking policy options")
