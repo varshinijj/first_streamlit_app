@@ -36,23 +36,23 @@ tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_
 col1, col2,col3 = st.columns([1, 6,1])
 
 with col1:
-    st.subheader("Choose Schemas")  
-    for x in list(sc['SCHEMA'].unique()):
-        schemas = st.checkbox('{}'.format(x),False)
-        if schemas==False:
-          sc = sc.loc[sc['SCHEMA']!=x]
-          sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
-          tags_tb = tags_tb.loc[tags_tb['SCHEMA']!=x]
-          tags_semantic = tags_semantic.loc[tags_semantic['SCHEMA']!=x]
-    allschemas = st.checkbox('All schemas',True)
-    if allschemas:
-      sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-      sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn) 
-      tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-      tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['SCHEMA','COLUMN_NAME','TAG_VALUE']]        
-
-
-
+  st.write("**Choose Schemas**")  
+  select = ['All Schemas','Select Schemas']
+  click = st.radio('Schemas:',select)
+  if click =='All Schemas':
+    sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
+    sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn) 
+    tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+    tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['SCHEMA','COLUMN_NAME','TAG_VALUE']]
+  else:
+    for x in list(sc['sc'].unique()):
+      schemas = st.checkbox('{}'.format(x),False)
+      if schemas==False:
+        sc = sc.loc[sc['SCHEMA']!=x]
+        sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
+        tags_tb = tags_tb.loc[tags_tb['SCHEMA']!=x]
+        tags_semantic = tags_semantic.loc[tags_semantic['SCHEMA']!=x]
+       
 with col2:
   
   d = graphviz.Digraph()
