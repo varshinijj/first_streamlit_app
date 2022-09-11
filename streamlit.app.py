@@ -45,7 +45,7 @@ with col1:
     tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
     tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['SCHEMA','COLUMN_NAME','TAG_VALUE']]
   else:
-    for x in list(sc['sc'].unique()):
+    for x in list(sc['SCHEMA']):
       schemas = st.checkbox('{}'.format(x),False)
       if schemas==False:
         sc = sc.loc[sc['SCHEMA']!=x]
