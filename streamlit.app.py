@@ -37,7 +37,7 @@ col1, col2,col3 = st.columns([1, 6,1])
 
 with col1: 
   select = ['All Schemas','Select Schemas']
-  click = st.radio('**Choose Schemas:**',select)
+  click = st.radio('Choose Schemas:',select)
   if click =='All Schemas':
     sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
     sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn) 
@@ -58,26 +58,26 @@ with col2:
   d.attr(bgcolor='dark')
   with d.subgraph() as s:
     s.attr(rank='same')
-    s.node('{}'.format(DB), fontcolor='white')  
+    s.node('{}'.format(DB), fontcolor='white',color = 'white')  
   with d.subgraph() as s:
     s.attr(rank='same')
     for x in list(sc['SCHEMA']):
-      s.node('{}'.format(x), fontcolor='white')
+      s.node('{}'.format(x), fontcolor='white',color = 'white')
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema', len='1.00',color='white') 
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
-      s.node('{}'.format(row['TABLE_NAME']), fontcolor='white')
+      s.node('{}'.format(row['TABLE_NAME']), fontcolor='white',color = 'white',shape='box')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),headlabel ='Table', len='1.00',color='white')
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
-      s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]), fontcolor='white')
+      s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]), fontcolor='white',color = 'white')
       d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]),headlabel='Column', len='1.00',color='white')
   with d.subgraph() as s:
     s.attr(rank='same',shape='diamond')
     for idx,row in tags_semantic.iterrows():
-      s.node('{}'.format(row['TAG_VALUE']), fontcolor='white')
+      s.node('{}'.format(row['TAG_VALUE']), fontcolor='white',color = 'white')
       d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']),headlabel='Tag', len='1.00',color='white')
        
   st.graphviz_chart(d)
