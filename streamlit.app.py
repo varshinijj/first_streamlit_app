@@ -91,7 +91,7 @@ with col2:
   st.graphviz_chart(d)
   if classify==True and remove==False:
     with st.expander("See Tags"):
-      display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['SCHEMA','DATABASE'],axis=1).rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'PRIVACY CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'SEMANTIC CATEGORY'})
+      display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['SCHEMA','DATABASE'],axis=1).rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
       display
               
         
