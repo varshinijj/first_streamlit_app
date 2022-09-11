@@ -63,11 +63,7 @@ with col1:
           sc = sc.loc[sc['SCHEMA']!=x]
           sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
           tags_tb_grouped = tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']!=x] 
-    with d.subgraph() as s:
-      s.attr(rank='same')
-      for idx,row in tags_tb_grouped.iterrows():
-        s.node('{}'.format(row['no.of.sensitive_col']),shape='circle',fontcolor='white',color = 'white')
-        d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')   
+   
 with col2:
   d = graphviz.Digraph()
   d.attr(bgcolor='black')
