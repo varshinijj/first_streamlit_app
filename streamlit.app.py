@@ -91,8 +91,9 @@ with col2:
   st.graphviz_chart(d)
   if classify==True and remove==False:
     with st.expander("See Tags"):
-      display=pd.merge(tags_pivot, sc, on=['SCHEMA'], how='inner')
+      display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['SCHEMA'])
       display
+              
         
 with col3:
   st.write("masking policy options")
