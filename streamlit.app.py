@@ -15,6 +15,7 @@ conn = snowflake.connector.connect(
 db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
 dbs = list(set(list(db_data['DATABASE'])))
 st.sidebar.title("Choose Database")
+@st.experimental_memo
 DB = st.sidebar.radio('select database:',dbs)
 
 st.sidebar.title("Configure Warehouse")
