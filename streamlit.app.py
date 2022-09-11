@@ -68,14 +68,14 @@ with col2:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
-      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),headlabel ='Table',labelfontcolor='white', len='1.00',color='white')
+      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
       s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]), fontcolor='white',color = 'white')
       d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]),headlabel='Column',labelfontcolor='white', len='1.00',color='white')
   with d.subgraph() as s:
-    s.attr(rank='same',shape='diamond')
+    s.attr(rank='same')
     for idx,row in tags_semantic.iterrows():
       s.node('{}'.format(row['TAG_VALUE']), fontcolor='white',color = 'white')
       d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']),headlabel='Tag', labelfontcolor='white',len='1.00',color='white')
