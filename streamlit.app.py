@@ -39,9 +39,7 @@ sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.informatio
 col1, col2,col3 = st.columns([1, 6,1])
 
 with col1:
-  classify = st.button('Classify')
-  if classify:
-    classify_def(DB)
+  classify = st.button('Classify',on_click=classify_def(DB))
       
 with col1: 
   select = ['All Schemas','Select Schemas']
@@ -49,16 +47,14 @@ with col1:
   if click =='All Schemas':
     sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
     sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-    if classify:
-      tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+    tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
   else:
     for x in list(sc['SCHEMA']):
       schemas = st.checkbox('{}'.format(x),False)
       if schemas==False:
         sc = sc.loc[sc['SCHEMA']!=x]
         sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
-        if classify:
-          tags_tb_grouped = tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']!=x] 
+        tags_tb_grouped = tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']!=x] 
        
 with col2:
   d = graphviz.Digraph()
