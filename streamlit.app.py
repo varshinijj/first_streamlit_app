@@ -91,10 +91,9 @@ with col2:
   st.graphviz_chart(d)
   if classify==True and remove==False:
     with st.expander("See Tags"):
-      for idx,row in tags_pivot.iterrows():
-        
-        row['SCHEMA']
-        
+      display = [(tags_pivot.SCHEMA.isin(sc.SCHEMA))]
+      display
+
         
 with col3:
   st.write("masking policy options")
