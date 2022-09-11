@@ -56,7 +56,7 @@ with col1:
         if classify:
           tags_tb_grouped = tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']!=x] 
        
-
+with col2:
   d = graphviz.Digraph()
   d.attr(bgcolor='dark')
   with d.subgraph() as s:
