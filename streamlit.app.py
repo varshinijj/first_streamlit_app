@@ -39,7 +39,9 @@ sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.informatio
 col1, col2,col3 = st.columns([1, 6,1])
 
 with col1:
-  classify = st.button('Classify',on_click=classify_def(DB))
+  classify = st.button('Classify')
+  if classify:
+    classify_def(DB)
   select = ['All Schemas','Select Schemas']
   click = st.radio('Choose Schemas:',select)
   if classify==False:
