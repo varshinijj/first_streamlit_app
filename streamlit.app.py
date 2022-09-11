@@ -47,7 +47,7 @@ with col1:
   classify = st.button('Classify')
   if classify:
     for idx,row in sc_tb.iterrows():
-      row['SCHEMA']
+      print(row['TABLE_NAME'])
 
 
    
