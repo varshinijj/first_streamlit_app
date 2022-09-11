@@ -33,6 +33,9 @@ tags = pd.read_sql("select OBJECT_DATABASE as database,OBJECT_SCHEMA as schema,O
 tags1 = tags.loc[tags['DATABASE']==DB][['SCHEMA','TABLE_NAME','COLUMN_NAME','TAG_NAME','TAG_VALUE']]
 tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['SCHEMA','COLUMN_NAME','TAG_VALUE']]
 tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+tags_tb1 = tags_tb[['SCHEMA','TABLE_NAME']]
+tags_tb_grouped = tags_tb1.groupby(['SCHEMA','TABLE_NAME']).size().reset_index()
+tags_tb_grouped
 col1, col2,col3 = st.columns([1, 6,1])
 
 with col1: 
@@ -69,16 +72,7 @@ with col2:
     for idx,row in sc_tb.iterrows():
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
-  with d.subgraph() as s:
-    s.attr(rank='same')
-    for idx,row in tags_tb.iterrows():
-      s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]), fontcolor='white',color = 'white')
-      d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]),headlabel='Column',labelfontcolor='white', len='1.00',color='white')
-  with d.subgraph() as s:
-    s.attr(rank='same')
-    for idx,row in tags_semantic.iterrows():
-      s.node('{}'.format(row['TAG_VALUE']), fontcolor='white',color = 'white')
-      d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']),headlabel='Tag', labelfontcolor='white',len='1.00',color='white')
+
        
   st.graphviz_chart(d)
 
