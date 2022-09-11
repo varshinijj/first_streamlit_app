@@ -44,7 +44,7 @@ with col1:
           sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
           tags_tb = tags_tb.loc[tags_tb['SCHEMA']!=x]
           tags_semantic = tags_semantic.loc[tags_semantic['SCHEMA']!=x]
-        else:
+        if schemas==True:
           allschemas = False
           sc = sc.loc[sc['SCHEMA']==x]
           sc_tb = sc_tb.loc[sc_tb['SCHEMA']==x]
