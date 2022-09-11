@@ -10,13 +10,7 @@ conn = snowflake.connector.connect(
                 account='bg35464.ap-southeast-1',
                 warehouse = 'SQLWH',
                 ocsp_fail_open=False)
-def classify_def(database):
-  for idx,row in sc_tb.iterrows():
-    conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'))".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']));
-    tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
-    tags_pivot = tags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-    tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
-    tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+
 
 db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
 dbs = list(set(list(db_data['DATABASE'])))
@@ -39,32 +33,26 @@ sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.informatio
 col1, col2,col3 = st.columns([1, 6,1])
 
 with col1:
-  classify = st.button('Classify')
-  if classify:
-    classify_def(DB)
   select = ['All Schemas','Select Schemas']
   click = st.radio('Choose Schemas:',select)
-  if classify==False:
-    if click =='All Schemas':
-      sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-      sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-    else:
-      for x in list(sc['SCHEMA']):
-        schemas = st.checkbox('{}'.format(x),False)
-        if schemas==False:
-          sc = sc.loc[sc['SCHEMA']!=x]
-          sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
+  if click =='All Schemas':
+    sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
+    sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
   else:
-    if click =='All Schemas':
-      sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-      sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-    else:
-      for x in list(sc['SCHEMA']):
-        schemas = st.checkbox('{}'.format(x),False)
-        if schemas==False:
-          sc = sc.loc[sc['SCHEMA']!=x]
-          sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
-          tags_tb_grouped = tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']!=x] 
+    for x in list(sc['SCHEMA']):
+      schemas = st.checkbox('{}'.format(x),False)
+      if schemas==False:
+        sc = sc.loc[sc['SCHEMA']!=x]
+        sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
+  classify = st.button('Classify')
+  if classify:
+    for idx,row in sc_tb.iterrows():
+      conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'))".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']));
+      tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
+      tags_pivot = tags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+      tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
+      tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+
    
 with col2:
   tags_tb_grouped
