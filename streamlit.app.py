@@ -12,10 +12,12 @@ conn = snowflake.connector.connect(
                 ocsp_fail_open=False)
 
 @st.experimental_memo
-db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
-dbs = list(set(list(db_data['DATABASE'])))
+def all_databases():
+  db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
+  dbs = list(set(list(db_data['DATABASE'])))
+  return dbs
 st.sidebar.title("Choose Database")
-DB = st.sidebar.radio('select database:',dbs)
+DB = st.sidebar.radio('select database:',all_databases())
 
 st.sidebar.title("Configure Warehouse")
 size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),1)
