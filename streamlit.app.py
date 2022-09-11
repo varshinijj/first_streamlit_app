@@ -55,7 +55,7 @@ with col1:
 
    
 with col2:
-  tags_tb_grouped
+  
   d = graphviz.Digraph()
   d.attr(bgcolor='black')
   with d.subgraph() as s:
