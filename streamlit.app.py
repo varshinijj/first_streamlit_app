@@ -91,7 +91,7 @@ with col2:
   st.graphviz_chart(d)
   if classify==True and remove==False:
     with st.expander("See Tags"):
-      display = [(tags_pivot.SCHEMA.isin(sc.SCHEMA))]
+      display = tags_pivot.SCHEMA.isin(sc.SCHEMA)
       display
 
         
