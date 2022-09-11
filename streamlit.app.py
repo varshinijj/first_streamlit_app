@@ -46,6 +46,7 @@ with col1:
         sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
   classify = st.button('Classify')
   if classify:
+    sc_tb
     for idx,row in sc_tb.iterrows():
       print(row['SCHEMA'],row['TABLE_NAME'])
       conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'))".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']));
