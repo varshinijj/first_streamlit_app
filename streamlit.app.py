@@ -74,7 +74,7 @@ with col1:
         tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
    
 with col2: 
-  st.info('Click classify to see the number of sensitive columns', icon="ℹ️")
+  st.info('The number of sensitive columns are shown after classification', icon="ℹ️")
   d = graphviz.Digraph()
   d.attr(bgcolor='#0e1117')
   with d.subgraph() as s:
