@@ -89,10 +89,11 @@ with col2:
         s.node('{}'.format(row['no.of.sensitive_col']),shape='circle',fontcolor='white',color = 'white')
         d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')            
   st.graphviz_chart(d)
-  with st.expander("See Tags"):
-    for idx,row in tags_pivot.iterrows():
-      if row['SCHEMA'] not in list(sc_tb['SCHEMA']):
-        row['SCHEMA']
+  if classify==True and remove==False:
+    with st.expander("See Tags"):
+      for idx,row in tags_pivot.iterrows():
+        if row['SCHEMA'] not in list(sc_tb['SCHEMA']):
+          row['SCHEMA']
         
 with col3:
   st.write("masking policy options")
