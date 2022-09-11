@@ -44,6 +44,12 @@ with col1:
           sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
           tags_tb = tags_tb.loc[tags_tb['SCHEMA']!=x]
           tags_semantic = tags_semantic.loc[tags_semantic['SCHEMA']!=x]
+        else:
+          allschemas = False
+          sc = sc.loc[sc['SCHEMA']==x]
+          sc_tb = sc_tb.loc[sc_tb['SCHEMA']==x]
+          tags_tb = tags_tb.loc[tags_tb['SCHEMA']==x]
+          tags_semantic = tags_semantic.loc[tags_semantic['SCHEMA']==x]
     allschemas = st.checkbox('All schemas',True)
     if allschemas:
       sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
@@ -53,6 +59,7 @@ with col1:
 
 
 with col2:
+  
   d = graphviz.Digraph()
   d.attr(bgcolor='grey')
   with d.subgraph() as s:
