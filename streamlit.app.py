@@ -91,7 +91,7 @@ with col2:
   st.graphviz_chart(d)
   if classify==True and remove==False:
     with st.expander("See Tags"):
-      display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['SCHEMA'])
+      display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['SCHEMA'],axis=1)
       display
               
         
