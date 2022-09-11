@@ -50,7 +50,7 @@ with col1:
   classify = st.button('Classify')
   if classify:
     if sc.shape[0] ==0:
-      col2.st.error('A Schema has to be selected', icon="🚨")
+      st.error('A Schema has to be selected', icon="🚨")
     else:
       alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
       for idx,row in sc_tb.iterrows():
