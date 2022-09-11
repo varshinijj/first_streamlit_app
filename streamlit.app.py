@@ -75,7 +75,7 @@ with col2:
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
   if classify==True:
-    tags_tb
+    alltags
     with d.subgraph() as s:
       s.attr(rank='same')
       for idx,row in tags_tb_grouped.iterrows():
