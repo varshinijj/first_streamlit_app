@@ -67,7 +67,7 @@ with col2:
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
-      s.node('{}'.format(row['TABLE_NAME']), fontcolor='white',color = 'white',shape='box')
+      s.node('{}'.format(row['TABLE_NAME']), fontcolor='white',color = 'white',shape='rectangle')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),headlabel ='Table', len='1.00',color='white')
   with d.subgraph() as s:
     s.attr(rank='same')
