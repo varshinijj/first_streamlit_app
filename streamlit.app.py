@@ -71,7 +71,7 @@ with col1:
 with col2:
   
   d = graphviz.Digraph()
-  d.attr(bgcolor='black')
+  d.attr(bgcolor='#0e1117')
   with d.subgraph() as s:
     s.attr(rank='same')
     s.node('{}'.format(DB), fontcolor='white',color = 'white')  
