@@ -92,8 +92,8 @@ with col2:
   if classify==True and remove==False:
     with st.expander("See Tags"):
       for idx,row in tags_pivot.iterrows():
-        if str(row['SCHEMA']) in list(sc_tb['SCHEMA']):
-          row['SCHEMA']
+        
+        row['SCHEMA']
         
         
 with col3:
