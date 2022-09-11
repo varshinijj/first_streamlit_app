@@ -67,6 +67,7 @@ with col1:
           tags_tb_grouped = tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']!=x] 
    
 with col2:
+  tags_tb_grouped
   d = graphviz.Digraph()
   d.attr(bgcolor='black')
   with d.subgraph() as s:
