@@ -85,13 +85,18 @@ with col2:
     for idx,row in sc_tb.iterrows():
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
-  if classify==True and remove==False:
-    with d.subgraph() as s:
-      s.attr(rank='same')
-      for idx,row in tags_tb_grouped.iterrows():
-        s.node('{}'.format(row['no.of.sensitive_col']),shape='circle',fontcolor='white',color = 'white')
-        d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')            
+  if sc.shape[0] ==0:
+    pass
+  else:
+    if classify==True:
+      with d.subgraph() as s:
+        s.attr(rank='same')
+        for idx,row in tags_tb_grouped.iterrows():
+          s.node('{}'.format(row['no.of.sensitive_col']),shape='circle',fontcolor='white',color = 'white')
+          d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')            
   st.graphviz_chart(d)
+  
+  
   if sc.shape[0] ==0:
     pass
   else:
