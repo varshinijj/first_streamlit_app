@@ -93,8 +93,11 @@ with col2:
         s.attr(rank='same')
         for idx,row in tags_tb_grouped.iterrows():
           s.node('{}'.format(row['no.of.sensitive_col']),shape='circle',fontcolor='white',color = 'white')
-          d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')            
-  st.graphviz_chart(d)
+          d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')
+  if sc.shape[0] ==0:
+    st.write("**Please Select a Schema**")
+  else:
+    st.graphviz_chart(d)
   
   
   if sc.shape[0] ==0:
