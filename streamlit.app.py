@@ -35,10 +35,9 @@ tags_semantic = tags1.loc[tags1['TAG_NAME']=='SEMANTIC_CATEGORY'][['SCHEMA','COL
 tags_tb = tags1.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
 col1, col2,col3 = st.columns([1, 6,1])
 
-with col1:
-  st.write("**Choose Schemas**")  
+with col1: 
   select = ['All Schemas','Select Schemas']
-  click = st.radio('Schemas:',select)
+  click = st.radio('**Choose Schemas:**',select)
   if click =='All Schemas':
     sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
     sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn) 
@@ -56,30 +55,30 @@ with col1:
 with col2:
   
   d = graphviz.Digraph()
-  d.attr(bgcolor='grey')
+  d.attr(bgcolor='dark')
   with d.subgraph() as s:
     s.attr(rank='same')
-    s.node('{}'.format(DB))  
+    s.node('{}'.format(DB), fontcolor='white')  
   with d.subgraph() as s:
     s.attr(rank='same')
     for x in list(sc['SCHEMA']):
-      s.node('{}'.format(x))
-      d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema', len='1.00') 
+      s.node('{}'.format(x), fontcolor='white')
+      d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema', len='1.00',color='white') 
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in sc_tb.iterrows():
-      s.node('{}'.format(row['TABLE_NAME']))
-      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),headlabel ='Table', len='1.00')
+      s.node('{}'.format(row['TABLE_NAME']), fontcolor='white')
+      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),headlabel ='Table', len='1.00',color='white')
   with d.subgraph() as s:
     s.attr(rank='same')
     for idx,row in tags_tb.iterrows():
-      s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]))
-      d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]),headlabel='Column', len='1.00')
+      s.node('{}'.format(str(row['COLUMN_NAME']).split()[1]), fontcolor='white')
+      d.edge('{}'.format(str(row['TABLE_NAME']).split()[1]),'{}'.format(str(row['COLUMN_NAME']).split()[1]),headlabel='Column', len='1.00',color='white')
   with d.subgraph() as s:
     s.attr(rank='same',shape='diamond')
     for idx,row in tags_semantic.iterrows():
-      s.node('{}'.format(row['TAG_VALUE']))
-      d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']),headlabel='Tag', len='1.00')
+      s.node('{}'.format(row['TAG_VALUE']), fontcolor='white')
+      d.edge('{}'.format(row['COLUMN_NAME']),'{}'.format(row['TAG_VALUE']),headlabel='Tag', len='1.00',color='white')
        
   st.graphviz_chart(d)
 
