@@ -17,7 +17,7 @@ def all_databases():
   dbs = list(set(list(db_data['DATABASE'])))
   return dbs
 st.sidebar.title("Choose Database")
-DB = st.sidebar.radio('select database:',all_databases())
+DB = st.sidebar.radio('Available databases:',all_databases())
 
 st.sidebar.title("Configure Warehouse")
 size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),1)
