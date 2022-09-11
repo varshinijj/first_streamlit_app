@@ -46,7 +46,7 @@ with col1:
     sc =  pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
     sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
     if classify:
-      tags_tb_grouped = tags_tb1.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+      tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
   else:
     for x in list(sc['SCHEMA']):
       schemas = st.checkbox('{}'.format(x),False)
