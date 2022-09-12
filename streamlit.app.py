@@ -63,8 +63,7 @@ with col1:
   select = ['All Schemas','Select Schemas']
   click = st.radio('Choose Schema:',select)
   if click =='All Schemas':
-    sc = sc() 
-    sc_tb = sc_tb()
+    pass
   else:
     for x in list(sc['SCHEMA']):
       schemas = st.checkbox('{}'.format(x),False)
