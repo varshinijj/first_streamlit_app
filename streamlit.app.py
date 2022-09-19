@@ -85,17 +85,17 @@ with col1:
       
 ####Removing the applied tags from tables####
 
-      st.write("click to remove tags")
-      remove = st.button('Remove')
-      if remove:
-        for idx,row in tags_pivot:
-          conn.cursor().execute("alter table {}.{}.{} modify column {} unset tag {};".format(DB,row['SCHEMA'],row['TABLE_NAME'],row['COLUMN_NAME'],row['TAG_NAME']))
-          tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
-          alltags = alltags.append(tags, ignore_index=True)
-        st.success('Tags Removed!', icon="✅")    
-        tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-        tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
-        tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+    st.write("click to remove tags")
+    remove = st.button('Remove')
+    if remove:
+      for idx,row in tags_pivot:
+        conn.cursor().execute("alter table {}.{}.{} modify column {} unset tag {};".format(DB,row['SCHEMA'],row['TABLE_NAME'],row['COLUMN_NAME'],row['TAG_NAME']))
+        tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
+        alltags = alltags.append(tags, ignore_index=True)
+      st.success('Tags Removed!', icon="✅")    
+      tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+      tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
+      tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
    
 ####col2--graphical representation of database,schemas,tables and if classified ---number of sensitive columns and the tags on each column displayed####
 
