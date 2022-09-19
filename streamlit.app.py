@@ -116,16 +116,16 @@ with col2:
   with d.subgraph() as s:                
     schemalist= []
     idxl = []
-    for idx,row in sc_tb.iterrows():
+    for i,row in sc_tb.iterrows():
       if row['SCHEMA'] not in schemalist:    
         s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
         schemalist.append(row['SCHEMA'])
-        idxl.append(idx)
+        idxl.append(i)
       else:
-        if idx not in idxl:
-          s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
-          d.edge('{}'.format(sc_tb['TABLE_NAME'][idx-1]),'{}'.format(row['TABLE_NAME']),color='white')
+        if i not in idxl:
+          s.node('{}'.format(row['TABLE_NAME'][i]),shape='tab', fontcolor='white',color = 'white')
+          d.edge('{}'.format(sc_tb['TABLE_NAME'][i-1]),'{}'.format(row['TABLE_NAME'][i]),color='white')
           idxl.append(idx) 
         
   	
