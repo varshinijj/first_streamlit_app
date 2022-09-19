@@ -115,9 +115,11 @@ with col2:
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
     for idx,row in sc_tb.iterrows():
-      if idx==0:    
+      schemalist= []
+      if row['SCHEMA'] not in schemalist:    
         s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
+        schemalist.append(row['SCHEMA'])
       
   	
       
