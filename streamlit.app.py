@@ -104,7 +104,7 @@ with col2:
 ####graphical representation of database,schemas,tables####  
   
   d = graphviz.Digraph()
-  d.attr(bgcolor='#0e1117')
+  d.attr(bgcolor='#0e1117',orientation="landscape")
   with d.subgraph() as s:
     s.attr(rank='same')
     s.node('{}'.format(DB), fontcolor='white',color = 'white')  
@@ -113,7 +113,11 @@ with col2:
     for x in list(sc['SCHEMA']):
       s.node('{}'.format(x), fontcolor='white',color = 'white')
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
-
+  with d.subgraph() as s:
+    s.attr(rank='same')
+    for idx,row in sc_tb.iterrows():
+      s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
+      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
   with d.subgraph() as s:
     for idx,row in sc_tb.iterrows():
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')		
