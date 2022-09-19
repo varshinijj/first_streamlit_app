@@ -118,9 +118,7 @@ with col2:
     for idx,row in sc_tb.iterrows():
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
-  with d.subgraph() as s:
-    for idx,row in sc_tb.iterrows():
-      s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')		
+  	
       
 ####number of tags in each table####
 
