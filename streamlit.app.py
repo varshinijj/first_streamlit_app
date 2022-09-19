@@ -117,7 +117,7 @@ with col2:
     with d.subgraph() as s:
       s.attr(rankdir='TB')
       s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
-      d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
+      
   	
       
 ####number of tags in each table####
