@@ -116,8 +116,7 @@ with col2:
 
   with d.subgraph cluster_0 as s:
     for idx,row in sc_tb.iterrows():
-      s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
-		
+      s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')		
       
 ####number of tags in each table####
 
