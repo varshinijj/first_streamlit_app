@@ -124,8 +124,8 @@ with col2:
         idxl.append(i)
       else:
         if i not in idxl:
-          s.node('{}'.format(row['TABLE_NAME'][i]),shape='tab', fontcolor='white',color = 'white')
-          d.edge('{}'.format(sc_tb['TABLE_NAME'][i-1]),'{}'.format(row['TABLE_NAME'][i]),color='white')
+          s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
+          
           idxl.append(i) 
         
   	
