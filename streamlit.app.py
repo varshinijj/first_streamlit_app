@@ -104,7 +104,7 @@ with col2:
 ####graphical representation of database,schemas,tables####  
   
   d = graphviz.Digraph()
-  d.attr(bgcolor='#0e1117',orientation="landscape")
+  d.attr(bgcolor='#0e1117')
   with d.subgraph() as s:
     s.attr(rank='same')
     s.node('{}'.format(DB), fontcolor='white',color = 'white')  
