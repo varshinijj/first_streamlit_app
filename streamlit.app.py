@@ -113,16 +113,21 @@ with col2:
     for x in list(sc['SCHEMA']):
       s.node('{}'.format(x), fontcolor='white',color = 'white')
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
-  with d.subgraph() as s:
+  with d.subgraph() as s:                
     schemalist= []
+    idxl = []
     for idx,row in sc_tb.iterrows():
       if row['SCHEMA'] not in schemalist:    
         s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
         schemalist.append(row['SCHEMA'])
+        idxl.append(idx)
       else:
-        s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
-      
+        if idx not in idxl:
+          s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
+          d.edge('{}'.format(sc_tb['tab'][idx-1]),'{}'.format(row['tab']),color='white')
+          idxl.append(idx) 
+        
   	
       
 ####number of tags in each table####
