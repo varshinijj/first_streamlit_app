@@ -102,7 +102,7 @@ with col2:
   st.info('The number of sensitive columns are shown after classification', icon="ℹ️")
   
 ####graphical representation of database,schemas,tables####  
-  sc_tb
+  
   d = graphviz.Digraph()
   d.attr(bgcolor='#0e1117')
   with d.subgraph() as s:
