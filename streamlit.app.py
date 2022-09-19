@@ -115,8 +115,9 @@ with col2:
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   for idx,row in sc_tb.iterrows():
     with d.subgraph() as s:
-      s.attr(rankdir='TB')
-      s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
+      if idx==1:
+        s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
+        d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
       
   	
       
