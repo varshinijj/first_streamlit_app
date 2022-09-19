@@ -117,7 +117,8 @@ with col2:
     
   for idx,row in sc_tb.iterrows():
     with d.subgraph() as s:
-      s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white',pack='true',sortv='0')
+      s.attr(rank='same')
+      s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
       d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white',style='invis')
   	
       
