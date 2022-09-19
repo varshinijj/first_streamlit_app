@@ -114,7 +114,7 @@ with col2:
       s.node('{}'.format(x), fontcolor='white',color = 'white')
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
-    sc_tb = sc_tb.reset_index()
+    sc_tb = sc_tb.sort_values(['SCHEMA','TABLE_NAME']).reset_index()
     schemalist= []
     idxl = []
     for i,row in sc_tb.iterrows():
