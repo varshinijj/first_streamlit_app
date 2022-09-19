@@ -120,6 +120,8 @@ with col2:
         s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
         d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
         schemalist.append(row['SCHEMA'])
+      else:
+        s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
       
   	
       
