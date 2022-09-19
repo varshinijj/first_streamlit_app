@@ -102,7 +102,7 @@ with col2:
   st.info('The number of sensitive columns are shown after classification', icon="ℹ️")
   
 ####graphical representation of database,schemas,tables####  
-  
+  sc_tb
   d = graphviz.Digraph()
   d.attr(bgcolor='#0e1117')
   with d.subgraph() as s:
@@ -128,7 +128,7 @@ with col2:
           d.edge('{}'.format(sc_tb['TABLE_NAME'][i-1]),'{}'.format(row['TABLE_NAME']),color='white')
           idxl.append(i) 
         
-  	
+ 
       
 ####number of tags in each table####
 
