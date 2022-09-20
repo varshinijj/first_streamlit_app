@@ -131,15 +131,12 @@ with col2:
       tl =[]
       for idx,row in tags_tb_grouped.iterrows():
         if row['SCHEMA'] not in tl:
-          if tags_pivot.shape[0]==0:
-            pass
-          else:
-            df= tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
-            df = df.reset_index(drop=True)
-            df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
-            s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
-            d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
-            tl.append(row['SCHEMA'])  
+          df= tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
+          df = df.reset_index(drop=True)
+          df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
+          s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
+          d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
+          tl.append(row['SCHEMA'])  
                    
 
 ####graph displayed####
