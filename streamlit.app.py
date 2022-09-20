@@ -28,18 +28,14 @@ DB = st.sidebar.radio('Available databases:',all_databases())
 ####warehouse configuration####
 
 st.sidebar.title("Configure Warehouse")
-size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2XLARGE','3XLARGE','4XLARGE'),1)
+size = st.sidebar.selectbox('select size', ('X-SMALL','SMALL','MEDIUM','LARGE','X-LARGE','2X-LARGE','3X-LARGE','4X-LARGE'),1)
 min, max = st.sidebar.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
 st.sidebar.write('min:', int(min), 'max:', int(max))
 apply = st.sidebar.button("Apply")
 if apply:
-  conn.cursor().execute("alter warehouse SQLWH set warehouse_size ={}  
-                        MAX_CLUSTER_COUNT ={} 
-                        MIN_CLUSTER_COUNT ={};".format(size,int(max),int(min)))
+  conn.cursor().execute("alter warehouse SQLWH set warehouse_size ={} MAX_CLUSTER_COUNT ={}  MIN_CLUSTER_COUNT ={};".format(size,int(max),int(min)))
 else:
-  conn.cursor().execute("alter warehouse SQLWH set warehouse_size = SMALL 
-                        MAX_CLUSTER_COUNT =2 
-                        MIN_CLUSTER_COUNT =1;")
+  conn.cursor().execute("alter warehouse SQLWH set warehouse_size = SMALL  MAX_CLUSTER_COUNT =2 MIN_CLUSTER_COUNT =1;")
 
 ####schemas and tables in the database are queried####   
 
