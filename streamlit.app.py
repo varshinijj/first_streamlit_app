@@ -46,7 +46,7 @@ sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.informatio
 
 ####separating layout into 3 columns####
 
-col1,pad1, col2,col3 = st.columns([1,1,18,1])
+col1,pad1, col2,col3 = st.columns([1,5,18,1])
 
 ####col1--selecting schemas, classifying and if classified---removing the tags option####
 
