@@ -28,7 +28,7 @@ DB = st.sidebar.radio('Available databases:',all_databases())
 ####warehouse configuration####
 
 st.sidebar.title("Configure Warehouse")
-size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE','2X-LARGE','3X-LARGE','4X-LARGE'),1)
+size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE'),1)
 min, max = st.sidebar.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
 st.sidebar.write('min:', int(min), 'max:', int(max))
 apply = st.sidebar.button("Apply")
