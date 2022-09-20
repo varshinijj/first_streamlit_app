@@ -153,7 +153,7 @@ with col2:
   else:
     if classify==True:
       with st.expander("See Tags"):
-        display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['SCHEMA','DATABASE'],axis=1).rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
+        display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['DATABASE'],axis=1).rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
         st.table(display)
               
 ####col3---masking policy options####  
