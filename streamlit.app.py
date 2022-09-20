@@ -123,7 +123,7 @@ with col2:
             df.rename(columns = {'TABLE_NAME':'TABLES'}, inplace = True)
             s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'red')
             d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
-            sl.append(row['sc'])
+            sl.append(row['SCHEMA'])
     
     
     
