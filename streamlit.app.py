@@ -131,7 +131,7 @@ with col2:
       tl =[]
       for idx,row in tags_tb_grouped.iterrows():
         if row['SCHEMA'] not in tl:
-          df= stags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
+          df= tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
           df = df.reset_index(drop=True)
           df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
           s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
