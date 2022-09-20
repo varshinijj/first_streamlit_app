@@ -46,7 +46,7 @@ sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.informatio
 
 ####separating layout into 3 columns####
 
-col1, col2,col3 = st.columns([2,6,2])
+col1, col2,col3 = st.columns([1,8,1])
 
 ####col1--selecting schemas, classifying and if classified---removing the tags option####
 
@@ -121,7 +121,7 @@ with col2:
             df= sc_tb.loc[sc_tb['SCHEMA']==row['SCHEMA']][['TABLE_NAME']]
             df = df.reset_index(drop=True)
             df.rename(columns = {'TABLE_NAME':'TABLES'}, inplace = True)
-            s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'red')
+            s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
             d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
             sl.append(row['SCHEMA'])
     
