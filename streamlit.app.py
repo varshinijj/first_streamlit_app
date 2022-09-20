@@ -115,19 +115,19 @@ with col2:
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
     sc_tb = sc_tb.sort_values(['SCHEMA','TABLE_NAME']).reset_index()
-    schemalist= []
-    idxl = []
-    for i,row in sc_tb.iterrows():
-      if row['SCHEMA'] not in schemalist:    
-        s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
-        d.edge('{}'.format(row['SCHEMA']),'{}'.format(row['TABLE_NAME']),color='white')
-        schemalist.append(row['SCHEMA'])
-        idxl.append(i)
-      else:
-        if i not in idxl:
-          s.node('{}'.format(row['TABLE_NAME']),shape='tab', fontcolor='white',color = 'white')
-          d.edge('{}'.format(sc_tb['TABLE_NAME'][i-1]),'{}'.format(row['TABLE_NAME']),color='white',style='invis')
-          idxl.append(i) 
+    sl = []
+    for idx,row in sc_tb.iterrows():
+      if row['SCHEMA'] not in sl:
+            df= sc_tb.loc[sc_tb['SCHEMA']==row['SCHEMA']][['TABLE_NAME']]
+            df = df.reset_index(drop=True)
+            df.rename(columns = {'TABLE_NAME':'TABLES'}, inplace = True)
+            s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'red')
+            d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
+            sl.append(row['sc'])
+    
+    
+    
+      
         
  
       
