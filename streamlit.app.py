@@ -114,35 +114,31 @@ with col2:
       s.node('{}'.format(x), fontcolor='white',color = 'white')
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
-    sc_tb = sc_tb.sort_values(['SCHEMA','TABLE_NAME']).reset_index()
-    sl = []
-    for idx,row in sc_tb.iterrows():
-      if row['SCHEMA'] not in sl:
-            df= sc_tb.loc[sc_tb['SCHEMA']==row['SCHEMA']][['TABLE_NAME']]
-            df = df.reset_index(drop=True)
-            df.rename(columns = {'TABLE_NAME':'TABLES'}, inplace = True)
-            s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
-            d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
-            sl.append(row['SCHEMA'])
-    
-    
-    
+    if classify==False:
+      sc_tb = sc_tb.sort_values(['SCHEMA','TABLE_NAME']).reset_index()
+      sl = []
+      for idx,row in sc_tb.iterrows():
+        if row['SCHEMA'] not in sl:
+          df= sc_tb.loc[sc_tb['SCHEMA']==row['SCHEMA']][['TABLE_NAME']]
+          df = df.reset_index(drop=True)
+          df.rename(columns = {'TABLE_NAME':'TABLES'}, inplace = True)
+          s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
+          d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
+          sl.append(row['SCHEMA'])  
+    else:
       
-        
- 
-      
-####number of tags in each table####
+####number of tags in each table####      
+      tl =[]
+      for idx,row in tags_tb_grouped.iterrows():
+        if row['SCHEMA'] not in tl:
+          df= stags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
+          df = df.reset_index(drop=True)
+          df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
+          s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
+          d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
+          tl.append(row['SCHEMA'])  
+                   
 
-  if sc.shape[0] ==0:
-    pass
-  else:
-    if classify==True:
-      with d.subgraph() as s:
-        s.attr(rank='same')
-        for idx,row in tags_tb_grouped.iterrows():
-          s.node('{}'.format(row['no.of.sensitive_col']),shape='circle',fontcolor='white',color = 'white')
-          d.edge('{}'.format(row['TABLE_NAME']),'{}'.format(row['no.of.sensitive_col']),color='white')
- 
 ####graph displayed####
           
   if sc.shape[0] ==0:
