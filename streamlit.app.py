@@ -35,8 +35,7 @@ st.sidebar.write('min:', int(min), 'max:', int(max))
 apply = st.sidebar.button("Apply")
 if apply:
   conn.cursor().execute("alter warehouse SQLWH set warehouse_size ={} MAX_CLUSTER_COUNT ={} MIN_CLUSTER_COUNT ={};".format(size,int(max),int(min)))
-else:
-  conn.cursor().execute("alter warehouse SQLWH set warehouse_size = SMALL  MAX_CLUSTER_COUNT =2 MIN_CLUSTER_COUNT =1;")
+
 
 ####schemas and tables in the database are queried####   
 
