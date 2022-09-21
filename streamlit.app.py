@@ -86,9 +86,9 @@ with tab1:
       final = final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']] 
       final
     if sc.shape[0]!=0:
-      st.write("No Tables under the schema")
+      st.error('No Tables under the schema', icon="🚨") 
     else:
-      st.write("Please select a schema")
+      st.error('Please select a schema', icon="🚨") 
 
       
       
