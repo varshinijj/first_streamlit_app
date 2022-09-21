@@ -71,37 +71,20 @@ with tab1:
       
 ####Classifying tables in schemas selected and applying tags on columns####
 
-    classify = st.button('Classify')
-    if classify:
-      if sc.shape[0] ==0:
-        st.error('A Schema has to be selected', icon="🚨")
-      else:
-        alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
-        alldatatypes = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','DATA_TYPE'])
-        for idx,row in sc_tb.iterrows():
-          conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'));".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']))        
-          tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn)         
-          datatype = pd.read_sql("select TABLE_CATALOG as database,TABLE_SCHEMA as schema,TABLE_NAME,COLUMN_NAME ,DATA_TYPE  FROM {}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA ='{}' and TABLE_NAME = '{}';".format(DB,row['SCHEMA'],row['TABLE_NAME']),conn)
-          alltags = alltags.append(tags, ignore_index=True) 
-          alldatatypes = alldatatypes.append(datatype,ignore_index=True)
-        st.success('Tags Applied!', icon="✅")  
-        tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-        tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
-        tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
-        alldatatypes = alldatatypes.rename(columns = {'TABLE_NAME':'TABLE NAME','ÇOLUMN_NAME':'COLUMN NAME','DATA_TYPE':'DATA TYPE'})
-####Removing the applied tags from tables####
+    
+    alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
+    alldatatypes = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','DATA_TYPE'])
+    for idx,row in sc_tb.iterrows():
+      conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'));".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']))        
+      tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn)         
+      datatype = pd.read_sql("select TABLE_CATALOG as database,TABLE_SCHEMA as schema,TABLE_NAME,COLUMN_NAME ,DATA_TYPE  FROM {}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA ='{}' and TABLE_NAME = '{}';".format(DB,row['SCHEMA'],row['TABLE_NAME']),conn)
+      alltags = alltags.append(tags, ignore_index=True) 
+      alldatatypes = alldatatypes.append(datatype,ignore_index=True)  
+    tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+    tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
+    tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+    alldatatypes = alldatatypes.rename(columns = {'TABLE_NAME':'TABLE NAME','ÇOLUMN_NAME':'COLUMN NAME','DATA_TYPE':'DATA TYPE'})
 
-        st.write("click to remove tags")
-        remove = st.button('Remove')
-        if remove:
-          for idx,row in tags_pivot:
-            conn.cursor().execute("alter table {}.{}.{} modify column {} unset tag {};".format(DB,row['SCHEMA'],row['TABLE_NAME'],row['COLUMN_NAME'],row['TAG_NAME']))
-            tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
-            alltags = alltags.append(tags, ignore_index=True)
-          st.success('Tags Removed!', icon="✅")    
-          tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-          tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
-          tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
    
 ####tab2--graphical representation of database,schemas,tables and if classified ---number of sensitive columns and the tags on each column displayed####
 
@@ -121,29 +104,16 @@ with tab2:
       s.node('{}'.format(x), fontcolor='white',color = 'white')
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
-    if classify==False:
-      sc_tb = sc_tb.sort_values(['SCHEMA','TABLE_NAME']).reset_index()
-      sl = []
-      for idx,row in sc_tb.iterrows():
-        if row['SCHEMA'] not in sl:
-          df= sc_tb.loc[sc_tb['SCHEMA']==row['SCHEMA']][['TABLE_NAME']]
-          df = df.reset_index(drop=True)
-          df.rename(columns = {'TABLE_NAME':'TABLES'}, inplace = True)
-          s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
-          d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
-          sl.append(row['SCHEMA'])  
-    else:
-      
 ####number of tags in each table####      
-      tl =[]
-      for idx,row in tags_tb_grouped.iterrows():
-        if row['SCHEMA'] not in tl:
-          df= tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
-          df = df.reset_index(drop=True)
-          df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
-          s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
-          d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
-          tl.append(row['SCHEMA'])  
+    tl =[]
+    for idx,row in tags_tb_grouped.iterrows():
+      if row['SCHEMA'] not in tl:
+        df= tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
+        df = df.reset_index(drop=True)
+        df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
+        s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
+        d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
+        tl.append(row['SCHEMA'])  
                    
 
 ####graph displayed####
@@ -159,11 +129,10 @@ with tab1:
     if sc.shape[0] ==0:
       pass
     else:
-      if classify==True:
-        display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
-        final = pd.merge(display,alldatatypes,left_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME'],right_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN_NAME'], how = 'left').drop(['COLUMN_NAME'],axis=1)
-        final = final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']] 
-        final
+      display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
+      final = pd.merge(display,alldatatypes,left_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME'],right_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN_NAME'], how = 'left').drop(['COLUMN_NAME'],axis=1)
+      final = final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']] 
+      final
         
 ####col3---masking policy options####  
 with tab1:
@@ -171,33 +140,32 @@ with tab1:
     st.write("masking policy options")
     c2tab1,c2tab2 = st.tabs(["Create & Apply Mask","Edit Mask"])
     with c2tab1:
-      if classify==True:
-        mschema = st.selectbox('Select schema:',list(set(final['SCHEMA'])))
-        mtable = st.selectbox('Select table:',list(set(final.loc[final['SCHEMA']==mschema]['TABLE NAME'])))
-        final2 = final.loc[final['SCHEMA']==mschema]
-        mcol = st.selectbox('Select Column:',list(set(final2.loc[final2['TABLE NAME']==mtable]['COLUMN NAME'])))
-        final3 = final2.loc[final2['TABLE NAME']==mtable]
-        final4dt = final3.loc[final3['COLUMN NAME']==mcol]['DATA TYPE']
-        name = st.text_input('Name of the mask:')
-        roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
-        rolelist = list(set(list(roles_acc['NAME'])))
-        roles = st.multiselect('Choose Roles that can see the data:',rolelist)
-        mdatatype = st.radio('Choose Datatype:',['String','Number'])
-        if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
-          if st.button('Create and Apply Mask'):
-            cur.execute("Use database {};".format(DB))
-            cur.execute("Use Schema {};".format(mshema))
-            cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,roles))
-            cur.execute("alter table {}.{}.{} modify column {} set masking policy {};".format(DB,mschema,mtable,mcol,name))        
-        else:
-          st.error('Data type doesnt match with the column', icon="🚨")           
-      with c2tab2:
-        ed = st.radio('',['Edit Mask','Drop Mask'])
+      mschema = st.selectbox('Select schema:',list(set(final['SCHEMA'])))
+      mtable = st.selectbox('Select table:',list(set(final.loc[final['SCHEMA']==mschema]['TABLE NAME'])))
+      final2 = final.loc[final['SCHEMA']==mschema]
+      mcol = st.selectbox('Select Column:',list(set(final2.loc[final2['TABLE NAME']==mtable]['COLUMN NAME'])))
+      final3 = final2.loc[final2['TABLE NAME']==mtable]
+      final4dt = final3.loc[final3['COLUMN NAME']==mcol]['DATA TYPE']
+      name = st.text_input('Name of the mask:')
+      roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
+      rolelist = list(set(list(roles_acc['NAME'])))
+      roles = st.multiselect('Choose Roles that can see the data:',rolelist)
+      mdatatype = st.radio('Choose Datatype:',['String','Number'])
+      if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
+        if st.button('Create and Apply Mask'):
+          cur.execute("Use database {};".format(DB))
+          cur.execute("Use Schema {};".format(mshema))
+          cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,roles))
+          cur.execute("alter table {}.{}.{} modify column {} set masking policy {};".format(DB,mschema,mtable,mcol,name))        
+      else:
+        st.error('Data type doesnt match with the column', icon="🚨")           
+    with c2tab2:
+      ed = st.radio('',['Edit Mask','Drop Mask'])
   #    policy = st.selectbox('Choose Masking policy:'            
-        if ed=='Edit Mask':
-          pass
-        else:
-          pass        
+      if ed=='Edit Mask':
+        pass
+      else:
+        pass        
                     
                  
       
