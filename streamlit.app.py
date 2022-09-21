@@ -171,32 +171,33 @@ with tab1:
     st.write("masking policy options")
     c2tab1,c2tab2 = st.tabs(["Create & Apply Mask","Edit Mask"])
     with c2tab1:
-      mschema = st.selectbox('Select schema:',list(set(final['SCHEMA'])))
-      mtable = st.selectbox('Select table:',list(set(final.loc[final['SCHEMA']==mschema]['TABLE NAME'])))
-      final2 = final.loc[final['SCHEMA']==mschema]
-      mcol = st.selectbox('Select Column:',list(set(final2.loc[final2['TABLE NAME']==mtable]['COLUMN NAME'])))
-      final3 = final2.loc[final2['TABLE NAME']==mtable]
-      final4dt = final3.loc[final3['COLUMN NAME']==mcol]['DATA TYPE']
-      name = st.text_input('Name of the mask:')
-      roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
-      rolelist = list(set(list(roles_acc['NAME'])))
-      roles = st.multiselect('Choose Roles that can see the data:',rolelist)
-      mdatatype = st.radio('Choose Datatype:',['String','Number'])
-      if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
-        if st.button('Create and Apply Mask'):
-          cur.execute("Use database {};".format(DB))
-          cur.execute("Use Schema {};".format(mshema))
-          cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,roles))
-          cur.execute("alter table {}.{}.{} modify column {} set masking policy {};".format(DB,mschema,mtable,mcol,name))        
-      else:
-        st.error('Data type doesnt match with the column', icon="🚨")           
-    with c2tab2:
-      ed = st.radio('',['Edit Mask','Drop Mask'])
+      if classify==True:
+        mschema = st.selectbox('Select schema:',list(set(final['SCHEMA'])))
+        mtable = st.selectbox('Select table:',list(set(final.loc[final['SCHEMA']==mschema]['TABLE NAME'])))
+        final2 = final.loc[final['SCHEMA']==mschema]
+        mcol = st.selectbox('Select Column:',list(set(final2.loc[final2['TABLE NAME']==mtable]['COLUMN NAME'])))
+        final3 = final2.loc[final2['TABLE NAME']==mtable]
+        final4dt = final3.loc[final3['COLUMN NAME']==mcol]['DATA TYPE']
+        name = st.text_input('Name of the mask:')
+        roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
+        rolelist = list(set(list(roles_acc['NAME'])))
+        roles = st.multiselect('Choose Roles that can see the data:',rolelist)
+        mdatatype = st.radio('Choose Datatype:',['String','Number'])
+        if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
+          if st.button('Create and Apply Mask'):
+            cur.execute("Use database {};".format(DB))
+            cur.execute("Use Schema {};".format(mshema))
+            cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,roles))
+            cur.execute("alter table {}.{}.{} modify column {} set masking policy {};".format(DB,mschema,mtable,mcol,name))        
+        else:
+          st.error('Data type doesnt match with the column', icon="🚨")           
+      with c2tab2:
+        ed = st.radio('',['Edit Mask','Drop Mask'])
   #    policy = st.selectbox('Choose Masking policy:'            
-      if ed=='Edit Mask':
-        pass
-      else:
-        pass        
+        if ed=='Edit Mask':
+          pass
+        else:
+          pass        
                     
                  
       
