@@ -186,7 +186,7 @@ with tab1:
         if st.button('Create and Apply Mask'):
           cur.execute("Use database {};".format(DB))
           cur.execute("Use Schema {};".format(mshema))
-          cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,roles)
+          cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,roles))
           cur.execute("alter table {}.{}.{} modify column {} set masking policy {};".format(DB,mschema,mtable,mcol,name)            
         else:
           pass 
