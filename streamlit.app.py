@@ -51,7 +51,7 @@ tab1, tab2 = st.tabs(["Detailed view",  "overview"])
 
 ####col1--selecting schemas, classifying and if classified---removing the tags option####
 with tab1:
-  with col1:
+  with col2:
   
 ####selecting schemas####
 
