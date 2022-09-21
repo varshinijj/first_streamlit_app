@@ -147,10 +147,11 @@ with tab1:
         final4dt = final3.loc[final3['COLUMN NAME']==mcol]['DATA TYPE']
         name = st.text_input('Name of the mask:')
         roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
-        roles_acc = roles_acc.set_index('NAME')
-        rolelist = roles_acc['NAME'].unique().tolist()
-        rolelist
-        roles = st.multiselect('Choose Roles that can see the data:',rolelist)
+        R =[]
+        for i, row in roles_acc.iterrows():
+          R.append(row['NAME'])
+        R  
+        roles = st.multiselect('Choose Roles that can see the data:',R)
         roles
         mdatatype = st.radio('Choose Datatype:',['String','Number'])
         if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
