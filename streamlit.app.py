@@ -68,7 +68,7 @@ with tab1:
 ####Classifying tables in schemas selected and applying tags on columns####
 with tab1:
   with col1:
-    if sc_tb.shape[0]!=0:
+    if sc.shape[0]!=0:
       alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
       alldatatypes = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','DATA_TYPE'])
       for idx,row in sc_tb.iterrows():
@@ -109,7 +109,7 @@ with tab2:
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
 ####number of tags in each table####  
-    if sc_tb.shape[0]!=0:
+    if sc.shape[0]!=0:
       tl =[]
       for idx,row in tags_tb_grouped.iterrows():
         if row['SCHEMA'] not in tl:
@@ -136,7 +136,7 @@ with tab1:
     st.write("masking policy options")
     c2tab1,c2tab2 = st.tabs(["Create & Apply Mask","Edit Mask"])
     with c2tab1:
-      if sc_tb.shape[0]!=0:
+      if sc.shape[0]!=0:
         mschema = st.selectbox('Select schema:',list(set(final['SCHEMA'])))
         mtable = st.selectbox('Select table:',list(set(final.loc[final['SCHEMA']==mschema]['TABLE NAME'])))
         final2 = final.loc[final['SCHEMA']==mschema]
