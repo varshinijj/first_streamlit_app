@@ -167,7 +167,7 @@ with tab1:
   with col2:
     st.write("masking policy options")
     c2tab1,c2tab2 = st.tabs(["Create Mask","Apply Mask"])
-    c2tab1:
+    with c2tab1:
       name = st.text_input('Name of the mask:')
       roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
       rolelist = list(set(list(roles_acc['NAME'])))
