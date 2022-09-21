@@ -192,7 +192,7 @@ with tab1:
         st.error('Data type doesnt match with the column', icon="🚨")           
     with c2tab2:
       ed = st.radio('',['Edit Mask','Drop Mask'])
-      policy = st.selectbox('Choose Masking policy:',              
+  #    policy = st.selectbox('Choose Masking policy:'            
       if ed=='Edit Mask':
         pass
       else:
