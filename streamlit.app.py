@@ -47,58 +47,59 @@ sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.informatio
 ####separating layout into 3 columns####
 
 col1,pad1, col2,pad2, col3 = st.columns([2,3,20,3,2])
+tab1, tab2 = st.tabs(["Detailed view",  "overview"])
 
 ####col1--selecting schemas, classifying and if classified---removing the tags option####
-
-with col1:
+with tab1:
+  with col1:
   
 ####selecting schemas####
 
-  select = ['All Schemas','Select Schemas']
-  click = st.radio('Choose Schema:',select)
-  if click =='All Schemas':
-    pass
-  else:
-    for x in list(sc['SCHEMA']):
-      schemas = st.checkbox('{}'.format(x),False)
-      if schemas==False:
-        sc = sc.loc[sc['SCHEMA']!=x]
-        sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x] 
+    select = ['All Schemas','Select Schemas']
+    click = st.radio('Choose Schema:',select)
+    if click =='All Schemas':
+      pass
+    else:
+      for x in list(sc['SCHEMA']):
+        schemas = st.checkbox('{}'.format(x),False)
+        if schemas==False:
+          sc = sc.loc[sc['SCHEMA']!=x]
+          sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x] 
       
 ####Classifying tables in schemas selected and applying tags on columns####
 
-  classify = st.button('Classify')
-  if classify:
-    if sc.shape[0] ==0:
-      st.error('A Schema has to be selected', icon="🚨")
-    else:
-      alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
-      for idx,row in sc_tb.iterrows():
-        conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'));".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']))        
-        tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
-        alltags = alltags.append(tags, ignore_index=True) 
-      st.success('', icon="✅")  
-      tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
-      tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
-      tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
-       
-####Removing the applied tags from tables####
-
-      st.write("click to remove tags")
-      remove = st.button('Remove')
-      if remove:
-        for idx,row in tags_pivot:
-          conn.cursor().execute("alter table {}.{}.{} modify column {} unset tag {};".format(DB,row['SCHEMA'],row['TABLE_NAME'],row['COLUMN_NAME'],row['TAG_NAME']))
+    classify = st.button('Classify')
+    if classify:
+      if sc.shape[0] ==0:
+        st.error('A Schema has to be selected', icon="🚨")
+      else:
+        alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
+        for idx,row in sc_tb.iterrows():
+          conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'));".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']))        
           tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
-          alltags = alltags.append(tags, ignore_index=True)
-        st.success('Tags Removed!', icon="✅")    
+          alltags = alltags.append(tags, ignore_index=True) 
+        st.success('', icon="✅")  
         tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
         tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
         tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
-   
-####col2--graphical representation of database,schemas,tables and if classified ---number of sensitive columns and the tags on each column displayed####
+       
+####Removing the applied tags from tables####
 
-with col2: 
+        st.write("click to remove tags")
+        remove = st.button('Remove')
+        if remove:
+          for idx,row in tags_pivot:
+            conn.cursor().execute("alter table {}.{}.{} modify column {} unset tag {};".format(DB,row['SCHEMA'],row['TABLE_NAME'],row['COLUMN_NAME'],row['TAG_NAME']))
+            tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
+            alltags = alltags.append(tags, ignore_index=True)
+          st.success('Tags Removed!', icon="✅")    
+          tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
+          tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
+          tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
+   
+####tab2--graphical representation of database,schemas,tables and if classified ---number of sensitive columns and the tags on each column displayed####
+
+with tab2: 
   st.info('The number of sensitive columns are shown after classification', icon="ℹ️")
   
 ####graphical representation of database,schemas,tables####  
@@ -147,19 +148,20 @@ with col2:
     st.graphviz_chart(d)
   
 ####tags on each column displayed in tabular format####
-
-  if sc.shape[0] ==0:
-    pass
-  else:
-    if classify==True:
-      with st.expander("See Tags"):
-        display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['DATABASE'],axis=1).rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
-        st.table(display)
+with tab1:
+  with col2:
+    if sc.shape[0] ==0:
+      pass
+    else:
+      if classify==True:
+        with st.expander("See Tags"):
+          display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').drop(['DATABASE'],axis=1).rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
+          st.table(display)
               
 ####col3---masking policy options####  
-
-with col3:
-  st.write("masking policy options")
+with tab1:
+  with col3:
+    st.write("masking policy options")
   
   
   
