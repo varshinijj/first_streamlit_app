@@ -113,7 +113,7 @@ with tab2:
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
 ####number of tags in each table####  
-    if sc_tb.shape[0]!=0:
+    if sc_tb.shape[0]!=0 and alltags.shape[0]!=0: 
       tl =[]
       for idx,row in tags_tb_grouped.iterrows():
         if row['SCHEMA'] not in tl:
