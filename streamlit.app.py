@@ -151,13 +151,13 @@ with tab1:
         for i, row in roles_acc.iterrows():
           R.append(row['NAME'])
         roles = st.multiselect('Choose Roles that can see the data:',R)
-        str(roles)[2]
+        sroles = (str(roles)[2:-2]).replace(' ',',')
         mdatatype = st.radio('Choose Datatype:',['String','Number'])
         if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
           if st.button('Create and Apply Mask'):
             cur.execute("Use database {};".format(DB))
             cur.execute("Use Schema {};".format(mschema))
-            cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,roles))
+            cur.execute("Create masking policy {} as (val {}) returns {} -> case when current_role() in ({}) then val else '*********' end;".format(name,mdatatype,mdatatype,sroles))
             cur.execute("alter table {}.{}.{} modify column {} set masking policy {};".format(DB,mschema,mtable,mcol,name))        
         else:
           st.error('Data type doesnt match with the column', icon="🚨")           
