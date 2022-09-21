@@ -147,6 +147,7 @@ with tab1:
       roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
       rolelist = list(set(list(roles_acc['NAME'])))
       roles = st.multiselect('Choose Roles that can see the data:',rolelist)
+      roles
       mdatatype = st.radio('Choose Datatype:',['String','Number'])
       if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
         if st.button('Create and Apply Mask'):
