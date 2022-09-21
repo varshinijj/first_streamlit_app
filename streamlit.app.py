@@ -24,7 +24,7 @@ def all_databases():
   dbs = list(set(list(db_data['DATABASE'])))
   return dbs
 st.sidebar.title("Choose Database")
-DB = st.sidebar.radio('Available databases:',all_databases())
+DB = st.sidebar.radio('Databases to classify:',all_databases())
 
 ####warehouse configuration####
 
