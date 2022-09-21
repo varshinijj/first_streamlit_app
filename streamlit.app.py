@@ -16,8 +16,6 @@ conn = snowflake.connector.connect(
 
 cur = conn.cursor() 
 
-
-
 ####database selection####
 
 @st.experimental_singleton
@@ -68,10 +66,9 @@ with tab1:
         if schemas==False:
           sc = sc.loc[sc['SCHEMA']!=x]
           sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x] 
-      
 ####Classifying tables in schemas selected and applying tags on columns####
 
-    
+
     alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
     alldatatypes = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','DATA_TYPE'])
     for idx,row in sc_tb.iterrows():
@@ -84,8 +81,14 @@ with tab1:
     tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
     tags_tb_grouped = tags_tb.groupby(['SCHEMA','TABLE_NAME']).size().reset_index(name='no.of.sensitive_col')
     alldatatypes = alldatatypes.rename(columns = {'TABLE_NAME':'TABLE NAME','ÇOLUMN_NAME':'COLUMN NAME','DATA_TYPE':'DATA TYPE'})
+    display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
+    final = pd.merge(display,alldatatypes,left_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME'],right_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN_NAME'], how = 'left').drop(['COLUMN_NAME'],axis=1)
+    final = final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']] 
+    final
 
-   
+
+      
+      
 ####tab2--graphical representation of database,schemas,tables and if classified ---number of sensitive columns and the tags on each column displayed####
 
 with tab2: 
