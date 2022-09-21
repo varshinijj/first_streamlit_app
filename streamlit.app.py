@@ -140,7 +140,7 @@ with tab1:
     st.write("masking policy options")
     c2tab1,c2tab2 = st.tabs(["Create & Apply Mask","Edit Mask"])
     with c2tab1:
-      if sc_tb.shape[0]!=0:
+      if sc_tb.shape[0]!=0 and alltags.shape[0]!=0: 
         mschema = st.selectbox('Select schema:',list(set(final['SCHEMA'])))
         mtable = st.selectbox('Select table:',list(set(final.loc[final['SCHEMA']==mschema]['TABLE NAME'])))
         final2 = final.loc[final['SCHEMA']==mschema]
