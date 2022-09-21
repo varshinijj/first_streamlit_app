@@ -158,9 +158,8 @@ with tab1:
     else:
       if classify==True:
         display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
-        display
-        alldatatypes
-        
+        final = pd.merge(display,alldatatypes,on=['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME'], how = 'left')
+        final
               
 ####col3---masking policy options####  
 with tab1:
