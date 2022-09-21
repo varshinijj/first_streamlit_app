@@ -159,11 +159,21 @@ with tab1:
       if classify==True:
         display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
         final = pd.merge(display,alldatatypes,left_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME'],right_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN_NAME'], how = 'left').drop(['COLUMN_NAME'],axis=1)
-        final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']]      
+        final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']] 
+        
+        
 ####col3---masking policy options####  
 with tab1:
   with col2:
     st.write("masking policy options")
+    c2tab1,c2tab = st.tabs(["Create Mask","Apply Mask"])
+    c2tab1:
+      name = st.text_input('Name of the mask:')
+      roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
+      rolelist = list(set(list(roles_acc['NAME'])))
+      roles = st.multiselect('Choose roles that can see the data',rolelist)
+      mdatatype = st.radio('Choose Datatype:',['String','Number'])
+      
   
   
   
