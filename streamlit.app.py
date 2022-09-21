@@ -68,9 +68,9 @@ with tab1:
 ####Classifying tables in schemas selected and applying tags on columns####
 with tab1:
   with col1:
-    alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
-    alldatatypes = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','DATA_TYPE'])
-    if sc.shape[0]!=0:
+    if sc_tb.shape[0]!=0:
+      alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
+      alldatatypes = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','DATA_TYPE'])
       for idx,row in sc_tb.iterrows():
         conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'));".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']))        
         tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn)         
@@ -108,16 +108,17 @@ with tab2:
       s.node('{}'.format(x), fontcolor='white',color = 'white')
       d.edge('{}'.format(DB),'{}'.format(x),headlabel='Schema',labelfontcolor='white', len='1.00',color='white') 
   with d.subgraph() as s:
-####number of tags in each table####      
-    tl =[]
-    for idx,row in tags_tb_grouped.iterrows():
-      if row['SCHEMA'] not in tl:
-        df= tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
-        df = df.reset_index(drop=True)
-        df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
-        s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
-        d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
-        tl.append(row['SCHEMA'])  
+####number of tags in each table####  
+    if sc_tb.shape[0]!=0:
+      tl =[]
+      for idx,row in tags_tb_grouped.iterrows():
+        if row['SCHEMA'] not in tl:
+          df= tags_tb_grouped.loc[tags_tb_grouped['SCHEMA']==row['SCHEMA']][['TABLE_NAME','no.of.sensitive_col']]
+          df = df.reset_index(drop=True)
+          df.rename(columns = {'TABLE_NAME':'TABLES','no.of.sensitive_col':'SENSITIVE_COLS'}, inplace = True)
+          s.node('{}'.format(df),shape='tab', fontcolor='white',color = 'white')
+          d.edge('{}'.format(row['SCHEMA']),'{}'.format(df),color='white')
+          tl.append(row['SCHEMA'])  
                    
 
 ####graph displayed####
