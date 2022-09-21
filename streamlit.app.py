@@ -160,6 +160,7 @@ with tab1:
         display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
         sc
         tags_pivot
+        st.dataframe(display)
         alldatatypes
         
               
