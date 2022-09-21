@@ -14,6 +14,9 @@ conn = snowflake.connector.connect(
                 warehouse = 'SQLWH',
                 ocsp_fail_open=False)
 
+cur = conn.cursor() 
+
+
 
 ####database selection####
 
@@ -166,15 +169,13 @@ with tab1:
 with tab1:
   with col2:
     st.write("masking policy options")
-    c2tab1,c2tab2 = st.tabs(["Create Mask","Apply Mask"])
-    with c2tab1:
-      name = st.text_input('Name of the mask:')
-      roles_acc = pd.read_sql("select name from SNOWFLAKE.ACCOUNT_USAGE.ROLES where deleted_on is null;",conn)
-      rolelist = list(set(list(roles_acc['NAME'])))
-      roles = st.multiselect('Choose roles that can see the data',rolelist)
-      mdatatype = st.radio('Choose Datatype:',['String','Number'])
+    c2tab1,c2tab2 = st.tabs(["Create & Apply Mask","Edit Mask"])
+          
+                    
+                 
       
-  
+                      
+                    
   
   
   
