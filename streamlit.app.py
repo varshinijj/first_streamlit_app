@@ -150,9 +150,8 @@ with tab1:
         R = []
         for i, row in roles_acc.iterrows():
           R.append(row['NAME'])
-        R  
         roles = st.multiselect('Choose Roles that can see the data:',R)
-        sroles = (str(roles)[2:-2]).replace(' ',',')
+        sroles = (str(roles)[2:-2])
         mdatatype = st.radio('Choose Datatype:',['String','Number'])
         if (mdatatype=='String' and str(final4dt).split()[1]=='TEXT') or (mdatatype =='Number' and str(final4dt).split()[1]=='NUMBER'):
           if st.button('Create and Apply Mask'):
