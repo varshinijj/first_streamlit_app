@@ -46,12 +46,13 @@ sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.informatio
 
 ####separating layout into 3 columns####
 
-col1,pad1, col2,pad2, col3 = st.columns([2,3,20,3,2])
+col1,pad1, col2 = st.columns([6,2,2])
 tab1, tab2 = st.tabs(["Detailed view",  "overview"])
 
 ####col1--selecting schemas, classifying and if classified---removing the tags option####
 with tab1:
-  with col2:
+  col1,pad1, col2 = st.columns([6,2,2])
+  with col1:
   
 ####selecting schemas####
 
@@ -149,7 +150,7 @@ with tab2:
   
 ####tags on each column displayed in tabular format####
 with tab1:
-  with col2:
+  with col1:
     if sc.shape[0] ==0:
       pass
     else:
@@ -160,7 +161,7 @@ with tab1:
               
 ####col3---masking policy options####  
 with tab1:
-  with col3:
+  with col2:
     st.write("masking policy options")
   
   
