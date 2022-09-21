@@ -74,10 +74,13 @@ with tab1:
         st.error('A Schema has to be selected', icon="🚨")
       else:
         alltags = pd.DataFrame(columns=['SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','TAG_NAME','TAG_VALUE'])
+        alldatatypes = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','DATA_TYPE'])
         for idx,row in sc_tb.iterrows():
           conn.cursor().execute("call ASSOCIATE_SEMANTIC_CATEGORY_TAGS('{}.{}.{}',EXTRACT_SEMANTIC_CATEGORIES('{}.{}.{}'));".format(DB,row['SCHEMA'],row['TABLE_NAME'],DB,row['SCHEMA'],row['TABLE_NAME']))        
-          tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn) 
+          tags = pd.read_sql("select OBJECT_SCHEMA as schema,OBJECT_NAME as table_name,COLUMN_NAME,TAG_NAME,TAG_VALUE from table({}.information_schema.tag_references_all_columns('{}.{}.{}','table'));".format(DB,DB,row['SCHEMA'],row['TABLE_NAME']),conn)         
+          datatype = pd.read_sql("select TABLE_CATALOG as database,TABLE_SCHEMA as schema,TABLE_NAME,COLUMN_NAME,DATA_TYPE  FROM {}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA ='{}' and TABLE_NAME = '{}';".format(DB,row['SCHEMA'],row['TABLE_NAME']),conn)
           alltags = alltags.append(tags, ignore_index=True) 
+          alldatatypes = alldatatypes.append(datatype,ignore_index=True)
         st.success('Tags Applied!', icon="✅")  
         tags_pivot = alltags.pivot(index=['SCHEMA','TABLE_NAME','COLUMN_NAME'],columns=['TAG_NAME'],values=['TAG_VALUE']).reset_index()
         tags_tb = tags_pivot[['SCHEMA','TABLE_NAME']]
@@ -155,7 +158,10 @@ with tab1:
     else:
       if classify==True:
         display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
-        st.dataframe(display)
+        sc
+        tags_pivot
+        alldatatypes
+        
               
 ####col3---masking policy options####  
 with tab1:
