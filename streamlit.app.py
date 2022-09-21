@@ -56,7 +56,7 @@ with tab1:
 ####selecting schemas####
 
     select = ['All Schemas','Select Schemas']
-    click = st.radio('Choose Schema:',select,horizontal=True)
+    click = st.radio('Choose Schema:',select,key=2,horizontal=True)
     if click =='All Schemas':
       pass
     else:
