@@ -25,8 +25,20 @@ def all_databases():
   return dbs
 
 
-st.sidebar.title("Choose Database to Classify")
-DB = st.sidebar.radio('Available Databases:',all_databases())
+def schema_sc():
+  st.sidebar.title("Choose Database to Classify")
+  DB = st.sidebar.radio('Available Databases:',all_databases())
+  sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
+  return sc
+
+def schema_sc_tb():
+  sc = schema_sc()
+  sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
+  return sc_tb
+
+sc_tb = schema_sc_tb()
+
+
 
 ####warehouse configuration####
 
@@ -40,18 +52,7 @@ if apply:
 
 
 ####schemas and tables in the database are queried####   
-def schema_sc():
-  st.sidebar.title("Choose Database to Classify")
-  DB = st.sidebar.radio('Available Databases:',all_databases())
-  sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-  return sc
 
-def schema_sc_tb():
-  sc = schema_sc()
-  sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-  return sc_tb
-
-sc_tb = schema_sc_tb()
 ####separating layout into 3 columns####
 
 tab1, tab2 = st.tabs(["Detailed view",  "overview"])
