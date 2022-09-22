@@ -38,9 +38,10 @@ if apply:
 
 
 ####schemas and tables in the database are queried####   
-
-sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
+@st.experimental_singleton
+def Schema():
+  sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
+  sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
 
 
 
@@ -54,9 +55,10 @@ with tab1:
   with col1:
   
 ####selecting schemas####
-
+    
     select = ['All Schemas','Select Schemas']
     click = st.radio('Choose Schema:',select,key=2,horizontal=True)
+    Schema()
     if click =='All Schemas':
       pass
     else:
