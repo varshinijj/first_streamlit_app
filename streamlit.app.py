@@ -66,6 +66,10 @@ with tab1:
           sc = sc.loc[sc['SCHEMA']!=x]
           sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x] 
 ####Classifying tables in schemas selected and applying tags on columns####
+@st.cache
+def convert_df(df):
+  return df.to_csv().encode('utf-8')
+  
 with tab1:
   with col1:
     if sc_tb.shape[0]!=0:
@@ -86,6 +90,9 @@ with tab1:
         final = pd.merge(display,alldatatypes,left_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME'],right_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN_NAME'], how = 'left').drop(['COLUMN_NAME'],axis=1)
         final = final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']]
         final
+        csv = convert_df(final)
+        st.download_button("Export Report",data=csv,file_name='Tags.csv',mime='text/csv')
+ 
       else:
         st.info('No columns in any of the tables has any sensitive data', icon="ℹ️")
     elif sc.shape[0]!=0:
