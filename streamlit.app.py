@@ -23,8 +23,8 @@ def all_databases():
   db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
   dbs = list(set(list(db_data['DATABASE'])))
   return dbs
-st.sidebar.title("Choose Database")
-DB = st.sidebar.radio('Databases to classify:',all_databases())
+st.sidebar.title("Choose Database to Classify")
+DB = st.sidebar.radio('Available Databases:',all_databases())
 
 ####warehouse configuration####
 
