@@ -18,11 +18,13 @@ cur = conn.cursor()
 
 ####database selection####
 
-@st.experimental_singleton
+
 def all_databases():
   db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
   dbs = list(set(list(db_data['DATABASE'])))
   return dbs
+
+
 st.sidebar.title("Choose Database to Classify")
 DB = st.sidebar.radio('Available Databases:',all_databases())
 
@@ -38,14 +40,18 @@ if apply:
 
 
 ####schemas and tables in the database are queried####   
+def schema_sc():
+  st.sidebar.title("Choose Database to Classify")
+  DB = st.sidebar.radio('Available Databases:',all_databases())
+  sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
+  return sc
 
-sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-  
+def schema_sc_tb():
+  sc = schema_sc()
+  sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
+  return sc_tb
 
-sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-  
-
-
+sc_tb = schema_sc_tb()
 ####separating layout into 3 columns####
 
 tab1, tab2 = st.tabs(["Detailed view",  "overview"])
@@ -145,7 +151,7 @@ with tab2:
   
 
         
-####col3---masking policy options####  
+####col2---masking policy options####  
 with tab1:
   with col2:
     st.write("masking policy options")
@@ -189,12 +195,11 @@ with tab1:
           else:
             pass        
                     
-                 
-      
-                      
-                    
-  
-  
-  
-
-
+        
+        
+        
+        
+        
+        
+        
+        
