@@ -63,8 +63,8 @@ with tab1:
     
     select = ['All Schemas','Select Schemas']
     click = st.radio('Choose Schema:',select,key=2,horizontal=True)
-    Schema_sc()
-    Schema_sc_tb()
+    sc = Schema_sc()
+    sc_tb = Schema_sc_tb()
     if click =='All Schemas':
       pass
     else:
