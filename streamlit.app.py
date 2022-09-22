@@ -172,6 +172,12 @@ with tab1:
         else:
           st.error('Data type doesnt match with the column', icon="🚨")           
       with c2tab2:
+        
+        allpolicy_tab = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','POLICY_NAME'])
+        for i,row in sc.iterrows():
+          policy_tab = pd.read_sql("select Policy_db as database,policy_schema as schema , ref_schema_name as table_name, ref_column_name as column_name,policy_name  from SNOWFLAKE.ACCOUNT_USAGE.POLICY_REFERENCES where Policy_db ={} and policy_schema={};".format(DB,row['SCHEMA']),conn)
+          allpolicy_tab.append()
+        policy = st.selectbox('Çhoose Masking Policy:'list(set(allpolicy_tab['POLICY_NAME'])))
         ed = st.radio('',['Edit Mask','Drop Mask'])
   #      policy = st.selectbox('Choose Masking policy:'            
         if ed=='Edit Mask':
