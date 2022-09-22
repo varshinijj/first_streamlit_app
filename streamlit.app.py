@@ -33,6 +33,13 @@ def schema_sc():
 
 sc = schema_sc()
 
+def schema_sc_tb():
+  sc = schema_sc()
+  sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
+  return sc_tb
+
+sc_tb = schema_sc_tb()
+
 
 
 ####warehouse configuration####
