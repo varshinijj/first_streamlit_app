@@ -38,16 +38,12 @@ if apply:
 
 
 ####schemas and tables in the database are queried####   
-@st.cache
-def Schema_sc():
-  sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-  return sc
 
+sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
+  
 
-@st.cache
-def Schema_sc_tb():
-  sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-  return sc_tb
+sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
+  
 
 
 ####separating layout into 3 columns####
@@ -63,8 +59,7 @@ with tab1:
     
     select = ['All Schemas','Select Schemas']
     click = st.radio('Choose Schema:',select,key=2,horizontal=True)
-    sc = Schema_sc()
-    sc_tb = Schema_sc_tb()
+    
     if click =='All Schemas':
       pass
     else:
