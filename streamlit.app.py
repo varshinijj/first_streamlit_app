@@ -62,7 +62,6 @@ with tab1:
         for n in list(sc_tb['TABLE_NAME']):
           if n not in tables:
             sc_tb = sc_tb.loc[sc_tb['TABLE_NAME']!=n] 
-   
             
 ####Classifying tables in schemas selected and applying tags on columns####
 @st.cache
@@ -99,7 +98,9 @@ with tab1:
       if sc_tb.shape[0]!=0:
         if click2=='Select Tables':
           st.info('Please Select a Table', icon="ℹ️")
-    elif sc_tb.shape[0]==0:    
+        else:
+          st.info('No Tables under the schema', icon="ℹ️")
+    elif sc_tb.shape[0]!=0 and sc.shape[0]!=0:    
         st.info('No Tables under the schema', icon="ℹ️")
     else:
       st.error('Please select a schema', icon="🚨") 
