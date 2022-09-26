@@ -7,10 +7,10 @@ st.set_page_config(layout="wide")
 
 ####connecting to snowflake account####
 conn = snowflake.connector.connect(
-                user='<>',
-                password='<>',
-                account='<>',
-                warehouse = '<>',
+                user='VARSHINI',
+                password='Snowflake@22!',
+                account='bg35464.ap-southeast-1',
+                warehouse = 'SQLWH',
                 ocsp_fail_open=False)
 cur = conn.cursor()
 ####database selection####
