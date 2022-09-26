@@ -183,8 +183,10 @@ with tab1:
           if ed=='Edit Mask':
             pass
           else:
-            pass        
-                    
+            pass         
+  with col1:
+    st.write("masked columns")
+    allpolicy_tab
         
         
         
