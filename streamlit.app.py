@@ -6,69 +6,42 @@ import snowflake.connector
 st.set_page_config(layout="wide")
 
 ####connecting to snowflake account####
-
 conn = snowflake.connector.connect(
-                user='VARSHINI',
-                password='Snowflake@22!',
-                account='bg35464.ap-southeast-1',
-                warehouse = 'SQLWH',
+                user='<>',
+                password='<>',
+                account='<>',
+                warehouse = '<>',
                 ocsp_fail_open=False)
-
-cur = conn.cursor() 
-
+cur = conn.cursor()
 ####database selection####
-
-
+@st.experimental_singleton
 def all_databases():
   db_data = pd.read_sql("select database_name as database from SNOWFLAKE.ACCOUNT_USAGE.DATABASES where database_name not in ('SNOWFLAKE','SNOWFLAKE_SAMPLE_DATA') and deleted is null;",conn)
   dbs = list(set(list(db_data['DATABASE'])))
   return dbs
-
-
-def schema_sc():
-  st.sidebar.title("Choose Database to Classify")
-  DB = st.sidebar.radio('Available Databases:',all_databases())
-  sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
-  return sc
-
-sc = schema_sc()
-
-def schema_sc_tb():
-  sc = schema_sc()
-  sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
-  return sc_tb
-
-sc_tb = schema_sc_tb()
-
-
-
+st.sidebar.title("Choose Database")
+DB = st.sidebar.radio('Databases to classify:',all_databases())
 ####warehouse configuration####
-
 st.sidebar.title("Configure Warehouse")
 size = st.sidebar.selectbox('select size', ('XSMALL','SMALL','MEDIUM','LARGE','XLARGE'),1)
 min, max = st.sidebar.select_slider('Select min and max clusters',options=['1', '2', '3', '4', '5', '6', '7','8','9','10'],value=('1', '2'))
 st.sidebar.write('min:', int(min), 'max:', int(max))
 apply = st.sidebar.button("Apply")
 if apply:
-  conn.cursor().execute("alter warehouse SQLWH set warehouse_size ={} MAX_CLUSTER_COUNT ={} MIN_CLUSTER_COUNT ={};".format(size,int(max),int(min)))
-
-
+  conn.cursor().execute("alter warehouse <> set warehouse_size ={} MAX_CLUSTER_COUNT ={} MIN_CLUSTER_COUNT ={};".format(size,int(max),int(min)))
 ####schemas and tables in the database are queried####   
-
+sc = pd.read_sql("select CATALOG_NAME AS DATABASE,SCHEMA_NAME AS SCHEMA from {}.information_schema.SCHEMATA where SCHEMA_NAME !='INFORMATION_SCHEMA';".format(DB),conn)
+sc_tb = pd.read_sql("select TABLE_SCHEMA AS SCHEMA,TABLE_NAME from {}.information_schema.TABLES where TABLE_SCHEMA != 'INFORMATION_SCHEMA';".format(DB),conn)
 ####separating layout into 3 columns####
 
 tab1, tab2 = st.tabs(["Detailed view",  "overview"])
-
 ####col1--selecting schemas, classifying and if classified---removing the tags option####
 with tab1:
   col1, col2 = st.columns([8,2])
   with col1:
-  
 ####selecting schemas####
-    
     select = ['All Schemas','Select Schemas']
     click = st.radio('Choose Schema:',select,key=2,horizontal=True)
-    
     if click =='All Schemas':
       pass
     else:
@@ -76,7 +49,7 @@ with tab1:
         schemas = st.checkbox('{}'.format(x),False)
         if schemas==False:
           sc = sc.loc[sc['SCHEMA']!=x]
-          sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x] 
+          sc_tb = sc_tb.loc[sc_tb['SCHEMA']!=x]
 ####Classifying tables in schemas selected and applying tags on columns####
 @st.cache
 def convert_df(df):
