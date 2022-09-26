@@ -186,10 +186,12 @@ with tab1:
           else:
             pass         
   with col1:
-    if sc_tb.shape[0]!=0 and alltags.shape[0]!=0 and allpolicy_tab.shape[0]!=0:
-       st.write("Masked Columns")
-       allpolicy_tab
-        
+    if sc_tb.shape[0]!=0 and alltags.shape[0]!=0:
+      if allpolicy_tab.shape[0]!=0:
+        st.write("Masked Columns")
+        allpolicy_tab
+      else:
+        st.info('No Columns are Masked', icon="ℹ️")
         
         
         
