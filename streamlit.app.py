@@ -88,6 +88,7 @@ with tab1:
         display=pd.merge(sc,tags_pivot, on=['SCHEMA'], how='inner').rename(columns={('TABLE_NAME',''):'TABLE NAME',('COLUMN_NAME',''):'COLUMN NAME',('TAG_VALUE','SEMANTIC_CATEGORY'):'SEMANTIC CATEGORY',('TAG_VALUE','PRIVACY_CATEGORY'):'PRIVACY CATEGORY'})
         final = pd.merge(display,alldatatypes,left_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME'],right_on=['DATABASE','SCHEMA','TABLE NAME','COLUMN_NAME'], how = 'left').drop(['COLUMN_NAME'],axis=1)
         final = final[['DATABASE','SCHEMA','TABLE NAME','COLUMN NAME','DATA TYPE','PRIVACY CATEGORY','SEMANTIC CATEGORY']]
+        st.write("Classification")
         final
         csv = convert_df(final)
         st.download_button("Export Report",data=csv,file_name='Tags.csv',mime='text/csv')
@@ -185,8 +186,9 @@ with tab1:
           else:
             pass         
   with col1:
-    st.write("masked columns")
-    allpolicy_tab
+    if sc_tb.shape[0]!=0 and alltags.shape[0]!=0 and allpolicy_tab.shape[0]!=0:
+       st.write("Masked Columns")
+       allpolicy_tab
         
         
         
