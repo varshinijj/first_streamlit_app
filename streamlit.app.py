@@ -96,7 +96,10 @@ with tab1:
       else:
         st.info('No columns in any of the tables has any sensitive data', icon="ℹ️")
     elif sc.shape[0]!=0:
-      st.info('No Tables under the schema', icon="ℹ️")
+      if click2=='Select Tables':
+        st.info('Please Select a Table', icon="ℹ️")
+    elif sc_tb.shape[0]==0:    
+        st.info('No Tables under the schema', icon="ℹ️")
     else:
       st.error('Please select a schema', icon="🚨") 
 
