@@ -189,7 +189,10 @@ with tab1:
           if ed=='Edit Mask':
             pass
           else:
-            pass         
+            pass
+            cur.execute("Use database {};".format(DB))
+            cur.execute("Use Schema {};".format(pschema))
+            cur.execute("drop masking policy {};".format(policy))
   with col1:
     if sc_tb.shape[0]!=0 and alltags.shape[0]!=0:
       if allpolicy_tab.shape[0]!=0:
