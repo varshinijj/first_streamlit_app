@@ -180,8 +180,9 @@ with tab1:
         if sc_tb.shape[0]!=0 and alltags.shape[0]!=0:
           allpolicy_tab = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','POLICY_NAME'])
           for i,row in sc_tb.iterrows():
+            row['TABLE_NAME']
             policy_tab = pd.read_sql("select policy_db as database,policy_schema as schema,ref_entity_name as table_name,ref_column_name as column_name,\
-            policy_name from table({}.information_schema.policy_references(ref_entity_name=>{},ref_entity_domain=>'TABLE'));".format(DB,row['TABLE_NAME']),conn)
+            policy_name from table({}.information_schema.policy_references(ref_entity_name=>'{}',ref_entity_domain=>'TABLE'));".format(DB,row['TABLE_NAME']),conn)
             allpolicy_tab = allpolicy_tab.append(policy_tab,ignore_index=True) 
           pschema = st.selectbox('Choose Schema:',list(set(allpolicy_tab['SCHEMA']))) 
           sch_poli = allpolicy_tab.loc[allpolicy_tab['SCHEMA']==pschema]
