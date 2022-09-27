@@ -185,6 +185,7 @@ with tab1:
           pschema = st.selectbox('Choose Schema:',list(set(allpolicy_tab['SCHEMA']))) 
           sch_poli = allpolicy_tab.loc[allpolicy_tab['SCHEMA']==pschema]
           policy = st.selectbox('Choose Masking Policy:',list(set(sch_poli['POLICY_NAME'])))
+          policy
           ed = st.radio('',['Edit Mask','Drop Mask'])
           if ed=='Edit Mask':
             pass
