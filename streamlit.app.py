@@ -179,8 +179,8 @@ with tab1:
       with c2tab2:
         if sc_tb.shape[0]!=0 and alltags.shape[0]!=0:
           allpolicy_tab = pd.DataFrame(columns=['DATABASE','SCHEMA', 'TABLE_NAME', 'COLUMN_NAME','POLICY_NAME'])
-          for i,row in sc.iterrows():
-            policy_tab = pd.read_sql("select Policy_db as database,policy_schema as schema , ref_schema_name as table_name, ref_column_name as column_name,policy_name  from SNOWFLAKE.ACCOUNT_USAGE.POLICY_REFERENCES where Policy_db ='{}' and policy_schema='{}';".format(DB,row['SCHEMA']),conn)
+          for i,row in sc_tb.iterrows():
+            policy_tab = pd.read_sql("select policy_db as database,policy_schema as schema,ref_entity_name as table_name,ref_column_name as column_name,policy_name from table({}.information_schema.policy_references(ref_entity_name=>'{}',ref_entity_domain=>'TABLE'));".format(DB,row['TABLE_NAME']),conn)
             allpolicy_tab = allpolicy_tab.append(policy_tab,ignore_index=True)
           pschema = st.selectbox('Choose Schema:',list(set(allpolicy_tab['SCHEMA']))) 
           sch_poli = allpolicy_tab.loc[allpolicy_tab['SCHEMA']==pschema]
@@ -191,9 +191,7 @@ with tab1:
             pass
           else:
             pass
-            cur.execute("Use database {};".format(DB))
-            cur.execute("Use Schema {};".format(pschema))
-            cur.execute("drop masking policy {};".format(policy))
+            #cur.execute("alter table {}.{}.{} modify column {} unset masking policy;".format(DB.pschema,)
   with col1:
     if sc_tb.shape[0]!=0 and alltags.shape[0]!=0:
       if allpolicy_tab.shape[0]!=0:
